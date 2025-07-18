@@ -3,6 +3,7 @@ version: '3.8'
 services:
   web:
     build: .
+    command: python backend/main.py  # <-- LINHA ADICIONADA
     ports:
       - "5000:5000"
     depends_on:

@@ -1,0 +1,10 @@
+# em requirements.txt
+flask
+celery
+redis
+psycopg2-binary
+sqlalchemy
+selenium
+beautifulsoup4
+pandas
+prometheus-client
