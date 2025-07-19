@@ -1,14 +1,16 @@
-version: '3.8'
+# docker-compose.yml
 
 services:
   web:
     build: .
-    command: python backend/main.py  # <-- LINHA ADICIONADA
+    command: python backend/main.py
     ports:
       - "5000:5000"
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy # <-- MUDANÇA: Espera o db estar saudável
+      redis:
+        condition: service_started
     environment:
       - DATABASE_URL=postgresql://user:password@db:5432/real_estate
       - REDIS_URL=redis://redis:6379/0
@@ -21,16 +23,28 @@ services:
       - POSTGRES_DB=real_estate
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck: # <-- SEÇÃO ADICIONADA
+      test: ["CMD-SHELL", "pg_isready -U user -d real_estate"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:6-alpine
+    healthcheck: # <-- Healthcheck opcional para o Redis
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   celery:
     build: .
     command: celery -A tasks worker --loglevel=info
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy # <-- MUDANÇA: Espera o db estar saudável
+      redis:
+        condition: service_started
     environment:
       - DATABASE_URL=postgresql://user:password@db:5432/real_estate
       - REDIS_URL=redis://redis:6379/0
@@ -39,8 +53,10 @@ services:
     build: .
     command: celery -A tasks beat --loglevel=info
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy # <-- MUDANÇA: Espera o db estar saudável
+      redis:
+        condition: service_started
     environment:
       - DATABASE_URL=postgresql://user:password@db:5432/real_estate
       - REDIS_URL=redis://redis:6379/0

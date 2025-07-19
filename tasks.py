@@ -1,5 +1,11 @@
 # tasks.py
 
+# Adiciona o diretório backend ao path do Python
+# para que ele possa encontrar os módulos como 'scrapers'
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), 'backend'))
+
 from utils.logging_config import setup_logging
 setup_logging()
 
@@ -8,31 +14,31 @@ from celery import Celery
 from celery.schedules import crontab
 from functools import wraps
 
-# Importações para as tarefas e métricas
-from scrapers.vivareal_scraper import VivaRealScraper
-from scrapers.zapimoveis_scraper import ZapImoveisScraper
-from scrapers.olx_scraper import OLXScraper
-from utils.decorators import track_scraping_metrics # Importando o decorator de métricas
-from prometheus_client import Counter, Histogram # Importando as ferramentas do Prometheus
+# Agora estas importações irão funcionar
+from backend.scrapers.vivareal_scraper import VivaRealScraper
+from backend.scrapers.zapimoveis_scraper import ZapImoveisScraper
+from backend.scrapers.olx_scraper import OLXScraper
+from utils.decorators import track_scraping_metrics
+from prometheus_client import Counter, Histogram
+
+from database import SessionLocal
+from backend.services.data_processor import DataProcessorService
 
 # --- DEFINIÇÃO DAS MÉTRICAS DO PROMETHEUS ---
-# Estas métricas são definidas no escopo global para serem compartilhadas entre as tarefas
 SCRAPED_PROPERTIES = Counter('scraped_properties_total', 'Total de imóveis coletados', ['source'])
 SCRAPING_DURATION = Histogram('scraping_duration_seconds', 'Tempo gasto na coleta (em segundos)', ['source'])
 ERRORS = Counter('scraping_errors_total', 'Total de erros na coleta', ['source', 'error_type'])
 
-
 # --- CONFIGURAÇÃO DO CELERY ---
 celery_app = Celery('real_estate_tasks')
 celery_app.config_from_object('celery_config')
-
 
 # --- DEFINIÇÃO DAS TAREFAS ---
 
 @celery_app.task
 def run_scraper_task(scraper_class_name, source_name):
     """
-    Tarefa que executa o scraper e é monitorada pelo decorator de métricas.
+    Tarefa que executa o scraper, monitora com métricas e salva os dados no banco.
     """
     scraper_map = {
         'VivaRealScraper': VivaRealScraper,
@@ -42,14 +48,13 @@ def run_scraper_task(scraper_class_name, source_name):
     scraper_class = scraper_map.get(scraper_class_name)
     if not scraper_class:
         logging.error(f"Scraper class '{scraper_class_name}' não encontrada.")
-        return []
+        return
 
     scraper = scraper_class()
-    all_property_data = []
 
-    # O decorator de métricas precisa ser aplicado dinamicamente aqui
     @track_scraping_metrics(source=source_name, scraped_properties_counter=SCRAPED_PROPERTIES, scraping_duration_histogram=SCRAPING_DURATION, errors_counter=ERRORS)
     def decorated_scraper():
+        # A URL de busca pode ser mais dinâmica no futuro
         property_links = scraper.get_property_links(f"{scraper.base_url}/venda/sp/sao-paulo/")
         logging.info(f"Encontrados {len(property_links)} links em {source_name}.")
         
@@ -62,11 +67,19 @@ def run_scraper_task(scraper_class_name, source_name):
 
     try:
         all_property_data = decorated_scraper()
-        logging.info(f"Tarefa de scraping para {source_name} concluída. Coletados {len(all_property_data)} imóveis.")
-        # Aqui viria a lógica para salvar os dados no banco
-        # processor.process_properties(all_property_data)
+
+        if all_property_data:
+            db_session = SessionLocal()
+            try:
+                processor = DataProcessorService(db_session=db_session)
+                processor.process_and_save_properties(all_property_data)
+                logging.info(f"Dados de {source_name} processados e salvos com sucesso.")
+            finally:
+                db_session.close()
+        else:
+            logging.info(f"Nenhum imóvel novo encontrado em {source_name} para salvar.")
+
     except Exception as e:
-        # O decorator já registrou o erro, mas logamos para ter o contexto completo.
         logging.error(f"A tarefa de scraping para {source_name} falhou: {e}", exc_info=True)
     finally:
         scraper.close()
@@ -74,10 +87,10 @@ def run_scraper_task(scraper_class_name, source_name):
 @celery_app.task
 def daily_market_analysis():
     logging.info("Iniciando tarefa de análise diária do mercado.")
-    # Lógica da análise...
+    # A lógica da análise viria aqui...
 
 # --- AGENDAMENTO DAS TAREFAS (CELERY BEAT) ---
-
+# ... (o agendamento continua igual)
 celery_app.conf.beat_schedule = {
     'scrape-vivareal-daily': {
         'task': 'tasks.run_scraper_task',

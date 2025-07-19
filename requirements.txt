@@ -8,3 +8,4 @@ selenium
 beautifulsoup4
 pandas
 prometheus-client
+requests
