@@ -1,19 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Scraper para OLX - versão final 2025 com suporte a múltiplas localizações
+Scraper para OLX - versão final 2025 otimizada para listagens
 """
 
 import time
 import random
 import logging
-import sys
-import os
 from typing import List, Dict, Optional
 from datetime import datetime
-
-# Adicionar o diretório backend ao path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -23,16 +18,12 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
-from config.location_config import LocationConfig
 
 class OLXScraper:
-    """Scraper otimizado para extrair dados de imóveis do OLX com suporte a múltiplas localizações"""
+    """Scraper otimizado para extrair dados de imóveis do OLX sem bloqueio"""
     
-    def __init__(self, location: str = 'rio_de_janeiro', property_type: str = 'apartamentos'):
+    def __init__(self):
         self.driver: Optional[webdriver.Chrome] = None
-        self.location_config = LocationConfig()
-        self.location = location
-        self.property_type = property_type
         self._setup_driver()
         
     def _setup_driver(self):
@@ -53,38 +44,15 @@ class OLXScraper:
             service = Service(ChromeDriverManager().install())
             self.driver = webdriver.Chrome(service=service, options=chrome_options)
             self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
-            logging.info(f"OLX Scraper inicializado para {self.location} - {self.property_type}")
+            logging.info("OLX Scraper inicializado com sucesso")
         except Exception as e:
             logging.error(f"Erro ao inicializar driver: {e}")
             raise
     
-    def get_available_locations(self) -> Dict[str, str]:
-        """Retorna localizações disponíveis"""
-        return self.location_config.get_location_display_names()
-    
-    def set_location(self, location: str, property_type: str = 'apartamentos'):
-        """Define localização e tipo de propriedade para busca"""
-        if location not in self.location_config.list_locations():
-            raise ValueError(f"Localização '{location}' não disponível. Use get_available_locations() para ver opções.")
-        
-        self.location = location
-        self.property_type = property_type
-        logging.info(f"Localização definida: {location} - {property_type}")
-    
     def scrape_properties(self, search_url: Optional[str] = None, max_pages: int = 3) -> List[Dict]:
         """Scraping principal - extrai propriedades do OLX das listagens"""
-        
-        # Se não foi fornecida URL, construir baseado na localização
         if not search_url:
-            try:
-                urls = self.location_config.build_urls(self.location, self.property_type)
-                search_url = urls['olx']
-                location_info = self.location_config.get_location(self.location)
-                if location_info:
-                    logging.info(f"Buscando {self.property_type} em {location_info.name}, {location_info.state}")
-            except Exception as e:
-                logging.error(f"Erro ao construir URL: {e}")
-                return []
+            search_url = "https://www.olx.com.br/imoveis/venda/apartamentos/estado-rj"
         
         logging.info(f"Iniciando scraping OLX: {search_url}")
         
@@ -115,15 +83,7 @@ class OLXScraper:
                     logging.error(f"Erro ao processar página {page}: {e}")
                     continue
             
-            # Adicionar informações de localização aos resultados
-            location_info = self.location_config.get_location(self.location)
-            if location_info:
-                for prop in properties:
-                    prop['search_location'] = location_info.name
-                    prop['search_state'] = location_info.state
-                    prop['property_type_searched'] = self.property_type
-            
-            logging.info(f"Scraping concluído. {len(properties)} propriedades extraídas em {location_info.name if location_info else 'localização não identificada'}")
+            logging.info(f"Scraping concluído. {len(properties)} propriedades extraídas")
             return properties
             
         except Exception as e:

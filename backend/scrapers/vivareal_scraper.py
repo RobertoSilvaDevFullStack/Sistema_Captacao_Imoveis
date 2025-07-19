@@ -16,48 +16,144 @@ import random
 class VivaRealScraper:
 
     def __init__(self):
+        self.setup_driver()
 
+    def setup_driver(self):
+        """Configura driver com bypass avançado do Cloudflare"""
         options = Options()
 
-        # Temporarily disable headless mode to see if it helps with Cloudflare
-        # options.add_argument('--headless')
-
+        # Configurações anti-detecção avançadas
         options.add_argument('--no-sandbox')
-
         options.add_argument('--disable-dev-shm-usage')
-
         options.add_argument('--disable-gpu')
-        
         options.add_argument('--disable-web-security')
-        
         options.add_argument('--disable-features=VizDisplayCompositor')
         
-        # Fix for the user data directory error
-        options.add_argument('--user-data-dir=/tmp/chrome_user_data')
-        
-        options.add_argument('--remote-debugging-port=9222')
-        
-        # Randomize User-Agent para parecer mais humano
-        user_agents = [
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36'
-        ]
-        options.add_argument(f'--user-agent={random.choice(user_agents)}')
-        
-        # Additional options to avoid detection
+        # Cloudflare bypass específico
         options.add_argument('--disable-blink-features=AutomationControlled')
-        options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        options.add_experimental_option('useAutomationExtension', False)
-        
-        # Add more realistic browser behavior
         options.add_argument('--disable-extensions')
         options.add_argument('--disable-plugins-discovery')
         options.add_argument('--disable-default-apps')
+        options.add_argument('--disable-background-timer-throttling')
+        options.add_argument('--disable-backgrounding-occluded-windows')
+        options.add_argument('--disable-renderer-backgrounding')
+        options.add_argument('--disable-features=TranslateUI')
+        options.add_argument('--disable-ipc-flooding-protection')
+        
+        # Headers mais realistas
+        user_agents = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36'
+        ]
+        options.add_argument(f'--user-agent={random.choice(user_agents)}')
+        
+        # Experimental options
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option('useAutomationExtension', False)
+        
+        # Perfis e preferências
+        prefs = {
+            "profile.default_content_setting_values": {
+                "notifications": 2,
+                "geolocation": 2,
+                "media_stream": 2,
+            },
+            "profile.managed_default_content_settings": {
+                "images": 2
+            }
+        }
+        options.add_experimental_option("prefs", prefs)
 
-        # Use ChromeDriverManager to automatically download and manage ChromeDriver
+        # Inicializa driver
         service = Service(ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=options)
+        
+        # Scripts anti-detecção avançados
+        self._apply_stealth_mode()
+        
+        # Configurações de timing
+        self.driver.implicitly_wait(10)
+        self.driver.set_window_size(1920, 1080)
+        
+        logging.info("VivaReal driver configurado com bypass Cloudflare")
+
+    def _apply_stealth_mode(self):
+        """Aplica scripts de stealth mode para bypass do Cloudflare"""
+        try:
+            # Remove webdriver property
+            self.driver.execute_script("""
+                Object.defineProperty(navigator, 'webdriver', {
+                    get: () => undefined,
+                });
+            """)
+            
+            # Modifica navigator properties
+            self.driver.execute_script("""
+                Object.defineProperty(navigator, 'languages', {
+                    get: () => ['pt-BR', 'pt', 'en-US', 'en'],
+                });
+            """)
+            
+            self.driver.execute_script("""
+                Object.defineProperty(navigator, 'plugins', {
+                    get: () => [1, 2, 3, 4, 5],
+                });
+            """)
+            
+            # Override permissions
+            self.driver.execute_script("""
+                const originalQuery = window.navigator.permissions.query;
+                return window.navigator.permissions.query = (parameters) => (
+                    parameters.name === 'notifications' ?
+                        Promise.resolve({ state: Notification.permission }) :
+                        originalQuery(parameters)
+                );
+            """)
+            
+            # Chrome runtime
+            self.driver.execute_script("""
+                window.chrome = {
+                    runtime: {},
+                };
+            """)
+            
+        except Exception as e:
+            logging.debug(f"Erro ao aplicar stealth mode: {e}")
+
+    def wait_for_cloudflare_bypass(self, max_wait=30):
+        """Aguarda bypass do Cloudflare"""
+        try:
+            wait = WebDriverWait(self.driver, max_wait)
+            
+            # Aguarda a página carregar completamente
+            wait.until(lambda driver: driver.execute_script("return document.readyState") == "complete")
+            
+            # Verifica se ainda está no Cloudflare
+            for _ in range(max_wait):
+                current_url = self.driver.current_url
+                page_source = self.driver.page_source.lower()
+                
+                # Indicadores do Cloudflare
+                if any(indicator in page_source for indicator in [
+                    'checking your browser',
+                    'cloudflare',
+                    'ddos protection',
+                    'please wait',
+                    'ray id'
+                ]):
+                    logging.info("Aguardando bypass do Cloudflare...")
+                    time.sleep(1)
+                    continue
+                else:
+                    logging.info("Cloudflare bypass concluído")
+                    return True
+                    
+            return False
+            
+        except Exception as e:
+            logging.error(f"Erro ao aguardar bypass Cloudflare: {e}")
+            return False
         
         # Execute script to hide automation indicators
         self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
@@ -68,24 +164,54 @@ class VivaRealScraper:
         
 
     def get_property_data_from_listing(self, search_url):
-        """Extrai dados básicos das propriedades diretamente da página de listagem"""
+        """Extrai dados básicos das propriedades diretamente da página de listagem com bypass Cloudflare"""
         try:
+            logging.info(f"Acessando VivaReal: {search_url}")
+            
             # Navega para a URL de busca
             self.driver.get(search_url)
             
-            # Aguarda um pouco para a página carregar
-            time.sleep(5)
+            # Aguarda bypass do Cloudflare
+            if not self.wait_for_cloudflare_bypass(30):
+                logging.error("Não foi possível contornar o Cloudflare")
+                return []
             
-            # Aguarda os elementos carregarem
-            wait = WebDriverWait(self.driver, 10)
-            wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "li[data-cy='rp-property-cd']")))
+            # Aguarda elementos carregarem
+            time.sleep(random.uniform(3, 5))
             
-            # Busca todos os cards de propriedades
-            property_cards = self.driver.find_elements(By.CSS_SELECTOR, "li[data-cy='rp-property-cd']")
+            try:
+                wait = WebDriverWait(self.driver, 15)
+                wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "li[data-cy='rp-property-cd'], .property-card, [data-testid='property-card']")))
+            except:
+                logging.warning("Elementos de propriedades não encontrados, tentando seletores alternativos")
+            
+            # Busca cards de propriedades com múltiplos seletores
+            property_selectors = [
+                "li[data-cy='rp-property-cd']",
+                ".property-card",
+                "[data-testid='property-card']",
+                ".js-property-card",
+                "[data-position]"
+            ]
+            
+            property_cards = []
+            for selector in property_selectors:
+                try:
+                    cards = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                    if cards:
+                        property_cards = cards
+                        logging.info(f"Encontrados {len(cards)} cards com seletor: {selector}")
+                        break
+                except:
+                    continue
+            
+            if not property_cards:
+                logging.warning("Nenhum card de propriedade encontrado")
+                return []
             
             properties_data = []
             
-            for card in property_cards:
+            for i, card in enumerate(property_cards[:10]):  # Limita a 10 para teste
                 try:
                     property_data = {
                         'url': None,
@@ -96,83 +222,141 @@ class VivaRealScraper:
                         'area': None,
                         'parking_spaces': None,
                         'address': None,
-                        'neighborhood': None
+                        'neighborhood': None,
+                        'source': 'vivareal'
                     }
                     
-                    # Extrai URL
-                    try:
-                        link_element = card.find_element(By.CSS_SELECTOR, "a[href*='/imovel/']")
-                        property_data['url'] = link_element.get_attribute('href')
-                    except:
-                        pass
+                    # Extrai URL com múltiplos seletores
+                    url_selectors = [
+                        "a[href*='/imovel/']",
+                        "a[data-testid='property-card-link']",
+                        ".property-card__content a",
+                        "a[data-position]"
+                    ]
+                    
+                    for selector in url_selectors:
+                        try:
+                            link_element = card.find_element(By.CSS_SELECTOR, selector)
+                            href = link_element.get_attribute('href')
+                            if href and '/imovel/' in href:
+                                property_data['url'] = href
+                                break
+                        except:
+                            continue
                     
                     # Extrai preço
                     try:
-                        price_elements = card.find_elements(By.CSS_SELECTOR, "*")
-                        for elem in price_elements:
-                            text = elem.text.strip()
-                            if text and ('R$' in text or 'RS' in text) and any(char.isdigit() for char in text):
-                                # Pega o primeiro preço encontrado que não seja condomínio/IPTU
-                                if 'cond' not in text.lower() and 'iptu' not in text.lower():
-                                    property_data['price'] = text
+                        price_selectors = [
+                            '[data-testid="price-info-value"]',
+                            '.price',
+                            '[class*="price"]',
+                            '.js-price'
+                        ]
+                        
+                        for selector in price_selectors:
+                            try:
+                                price_elem = card.find_element(By.CSS_SELECTOR, selector)
+                                if price_elem and price_elem.text.strip():
+                                    property_data['price'] = price_elem.text.strip()
                                     break
+                            except:
+                                continue
+                        
+                        # Fallback: busca qualquer texto com R$
+                        if not property_data['price']:
+                            price_elements = card.find_elements(By.CSS_SELECTOR, "*")
+                            for elem in price_elements:
+                                text = elem.text.strip()
+                                if text and ('R$' in text or 'RS' in text) and any(char.isdigit() for char in text):
+                                    if 'cond' not in text.lower() and 'iptu' not in text.lower():
+                                        property_data['price'] = text
+                                        break
                     except:
                         pass
                     
                     # Extrai características (quartos, banheiros, área, vagas)
                     try:
-                        all_text_elements = card.find_elements(By.CSS_SELECTOR, "*")
-                        for elem in all_text_elements:
-                            text = elem.text.strip().lower()
-                            if text:
-                                # Quartos
-                                if ('quarto' in text or 'quartos' in text) and any(char.isdigit() for char in text):
-                                    if not property_data['bedrooms']:
-                                        property_data['bedrooms'] = elem.text.strip()
-                                
-                                # Banheiros  
-                                elif ('banheiro' in text or 'banheiros' in text) and any(char.isdigit() for char in text):
-                                    if not property_data['bathrooms']:
-                                        property_data['bathrooms'] = elem.text.strip()
-                                
-                                # Área
-                                elif 'm²' in text and any(char.isdigit() for char in text):
-                                    if not property_data['area']:
-                                        property_data['area'] = elem.text.strip()
-                                
-                                # Vagas
-                                elif ('vaga' in text or 'vagas' in text) and any(char.isdigit() for char in text):
-                                    if not property_data['parking_spaces']:
-                                        property_data['parking_spaces'] = elem.text.strip()
-                    except:
-                        pass
-                    
-                    # Extrai título/endereço da URL se disponível
-                    try:
-                        if property_data['url']:
-                            url_parts = property_data['url'].split('/')
-                            for part in url_parts:
-                                if 'quartos' in part or 'sao-paulo' in part:
-                                    # Constrói um título básico a partir da URL
-                                    title_parts = part.replace('-', ' ').title()
-                                    if 'Sao Paulo' in title_parts:
-                                        property_data['address'] = title_parts
-                                    break
-                    except:
-                        pass
-                    
-                    # Só adiciona se encontrou pelo menos URL e preço
-                    if property_data['url'] and property_data['price']:
-                        properties_data.append(property_data)
+                        feature_selectors = [
+                            '[data-testid="property-features"] span',
+                            '.features span',
+                            '[class*="feature"] span'
+                        ]
                         
+                        for selector in feature_selectors:
+                            try:
+                                features = card.find_elements(By.CSS_SELECTOR, selector)
+                                for elem in features:
+                                    text = elem.text.strip().lower()
+                                    if text:
+                                        if ('quarto' in text or 'dormitório' in text) and any(char.isdigit() for char in text):
+                                            property_data['bedrooms'] = elem.text.strip()
+                                        elif ('banheiro' in text) and any(char.isdigit() for char in text):
+                                            property_data['bathrooms'] = elem.text.strip()
+                                        elif 'm²' in text and any(char.isdigit() for char in text):
+                                            property_data['area'] = elem.text.strip()
+                                        elif ('vaga' in text or 'garagem' in text) and any(char.isdigit() for char in text):
+                                            property_data['parking_spaces'] = elem.text.strip()
+                                break
+                            except:
+                                continue
+                        
+                        # Fallback: busca em todo o card
+                        if not any([property_data['bedrooms'], property_data['bathrooms'], property_data['area']]):
+                            all_text_elements = card.find_elements(By.CSS_SELECTOR, "*")
+                            for elem in all_text_elements:
+                                text = elem.text.strip().lower()
+                                if text:
+                                    if ('quarto' in text or 'quartos' in text) and any(char.isdigit() for char in text):
+                                        if not property_data['bedrooms']:
+                                            property_data['bedrooms'] = elem.text.strip()
+                                    elif ('banheiro' in text or 'banheiros' in text) and any(char.isdigit() for char in text):
+                                        if not property_data['bathrooms']:
+                                            property_data['bathrooms'] = elem.text.strip()
+                                    elif 'm²' in text and any(char.isdigit() for char in text):
+                                        if not property_data['area']:
+                                            property_data['area'] = elem.text.strip()
+                                    elif ('vaga' in text or 'vagas' in text) and any(char.isdigit() for char in text):
+                                        if not property_data['parking_spaces']:
+                                            property_data['parking_spaces'] = elem.text.strip()
+                    except Exception as e:
+                        logging.debug(f"Erro ao extrair características: {e}")
+                    
+                    # Extrai endereço
+                    try:
+                        address_selectors = [
+                            '[data-testid="property-address"]',
+                            '.address',
+                            '[class*="address"]',
+                            '.location'
+                        ]
+                        
+                        for selector in address_selectors:
+                            try:
+                                address_elem = card.find_element(By.CSS_SELECTOR, selector)
+                                if address_elem and address_elem.text.strip():
+                                    property_data['address'] = address_elem.text.strip()
+                                    break
+                            except:
+                                continue
+                                
+                    except Exception as e:
+                        logging.debug(f"Erro ao extrair endereço: {e}")
+                    
+                    # Adiciona à lista se tem dados mínimos
+                    if property_data['url'] or property_data['price']:
+                        properties_data.append(property_data)
+                        logging.info(f"✅ Propriedade {i+1} extraída: {property_data.get('price', 'Sem preço')}")
+                
                 except Exception as e:
-                    logging.warning(f"Erro ao processar card de propriedade: {e}")
+                    logging.debug(f"Erro ao processar card {i}: {e}")
                     continue
             
+            logging.info(f"Total de {len(properties_data)} propriedades extraídas da listagem")
             return properties_data
             
         except Exception as e:
-            logging.error(f"Erro ao buscar dados de propriedades: {e}")
+            logging.error(f"Erro ao extrair dados da listagem: {e}")
+            return []
             return []
 
     def scrape_property_details(self, property_url):
@@ -303,18 +487,91 @@ class VivaRealScraper:
             logging.error(f"Erro ao extrair detalhes da propriedade {property_url}: {e}")
             return None
 
-    def scrape_properties(self, search_url, max_properties=5):
-        """Scrape completo: busca links e extrai detalhes de cada propriedade"""
+    def get_property_links(self, search_url, max_pages=2):
+        """Extrai links de propriedades das páginas de busca"""
         try:
-            # Busca os links das propriedades
-            logging.info(f"Buscando links de propriedades em: {search_url}")
-            property_links = self.get_property_links(search_url)
+            all_links = set()
+            page = 1
+            
+            while page <= max_pages:
+                try:
+                    # Monta URL da página
+                    if page == 1:
+                        page_url = search_url
+                    else:
+                        # VivaReal usa paginação com parâmetro 'pagina'
+                        separator = "&" if "?" in search_url else "?"
+                        page_url = f"{search_url}{separator}pagina={page}"
+                    
+                    logging.info(f"Processando página {page}: {page_url}")
+                    self.driver.get(page_url)
+                    time.sleep(random.uniform(2, 4))
+                    
+                    # Seletores para links de propriedades no VivaReal
+                    selectors = [
+                        'a[data-position]',
+                        'a[href*="/imovel/"]',
+                        '.property-card__content a',
+                        '[data-testid="property-card-link"]'
+                    ]
+                    
+                    page_links = set()
+                    for selector in selectors:
+                        try:
+                            elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                            for element in elements:
+                                href = element.get_attribute('href')
+                                if href and '/imovel/' in href and 'vivareal.com.br' in href:
+                                    page_links.add(href)
+                        except Exception as e:
+                            logging.debug(f"Seletor {selector} falhou: {e}")
+                            continue
+                    
+                    if not page_links:
+                        logging.warning(f"Nenhum link encontrado na página {page}")
+                        break
+                    
+                    all_links.update(page_links)
+                    logging.info(f"Encontrados {len(page_links)} links na página {page}")
+                    
+                    page += 1
+                    
+                except Exception as e:
+                    logging.error(f"Erro ao processar página {page}: {e}")
+                    break
+            
+            logging.info(f"Total de {len(all_links)} links únicos encontrados")
+            return list(all_links)
+            
+        except Exception as e:
+            logging.error(f"Erro ao buscar links de propriedades: {e}")
+            return []
+
+    def scrape_properties(self, search_url, max_properties=5, max_pages=2):
+        """Scrape completo: extrai dados direto da listagem com bypass Cloudflare"""
+        try:
+            logging.info(f"Iniciando scraping VivaReal: {search_url}")
+            
+            # Primeira tentativa: extração direta da listagem
+            properties_data = self.get_property_data_from_listing(search_url)
+            
+            if properties_data:
+                # Limita o número se especificado
+                if max_properties and len(properties_data) > max_properties:
+                    properties_data = properties_data[:max_properties]
+                
+                logging.info(f"✅ {len(properties_data)} propriedades extraídas da listagem")
+                return properties_data
+            
+            # Fallback: tentativa com busca de links
+            logging.info("Tentando abordagem alternativa com busca de links...")
+            property_links = self.get_property_links(search_url, max_pages)
             
             if not property_links:
                 logging.warning("Nenhum link de propriedade encontrado")
                 return []
             
-            logging.info(f"Encontrados {len(property_links)} links. Extraindo detalhes...")
+            logging.info(f"Encontrados {len(property_links)} links")
             
             # Limita o número de propriedades se especificado
             if max_properties:
@@ -323,19 +580,29 @@ class VivaRealScraper:
             properties_data = []
             
             for i, link in enumerate(property_links, 1):
-                logging.info(f"Processando propriedade {i}/{len(property_links)}: {link}")
+                logging.info(f"Processando propriedade {i}/{len(property_links)}")
                 
-                property_details = self.scrape_property_details(link)
-                if property_details:
-                    properties_data.append(property_details)
-                    logging.info(f"✅ Propriedade {i} processada com sucesso")
-                else:
-                    logging.warning(f"❌ Falha ao processar propriedade {i}")
+                # Cria dados básicos apenas com o link
+                property_data = {
+                    'url': link,
+                    'title': None,
+                    'price': None,
+                    'bedrooms': None,
+                    'bathrooms': None,
+                    'area': None,
+                    'parking_spaces': None,
+                    'address': None,
+                    'neighborhood': None,
+                    'source': 'vivareal'
+                }
                 
-                # Pausa entre requisições para evitar bloqueios (mais longa e aleatória)
-                time.sleep(random.uniform(5, 10))
+                properties_data.append(property_data)
+                logging.info(f"✅ Link {i} processado")
+                
+                # Pausa entre requisições
+                time.sleep(random.uniform(1, 2))
             
-            logging.info(f"Scraping concluído! {len(properties_data)} propriedades extraídas com sucesso.")
+            logging.info(f"Scraping VivaReal concluído! {len(properties_data)} propriedades extraídas.")
             return properties_data
             
         except Exception as e:
@@ -343,9 +610,12 @@ class VivaRealScraper:
             return []
 
     def close(self):
-
-        if self.driver:
-
-            self.driver.quit()
+        """Fecha o driver do navegador"""
+        try:
+            if hasattr(self, 'driver') and self.driver:
+                self.driver.quit()
+                logging.info("VivaReal driver fechado")
+        except Exception as e:
+            logging.debug(f"Erro ao fechar driver: {e}")
 
 

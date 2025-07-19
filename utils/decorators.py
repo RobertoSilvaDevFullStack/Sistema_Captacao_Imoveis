@@ -4,8 +4,14 @@ import time
 import logging
 from functools import wraps
 
-# --- DECORATOR 1: RATE LIMITER (Este você já tem) ---
-def rate_limit(calls_per_second=1):
+# --- DECORATOR 1: RATE LIMITER (Atualizado para aceitar float) ---
+def rate_limit(calls_per_second=1.0):
+    """
+    Decorator que limita a frequência de chamadas de uma função
+    
+    Args:
+        calls_per_second (float): Número de chamadas permitidas por segundo
+    """
     def decorator(func):
         last_called = [0.0]
         
