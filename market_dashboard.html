@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 Dashboard - Análise de Mercado Imobiliário</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .metric:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+        
+        .metric-value {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .opportunity-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .opportunity-header {
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 0.5rem;
+        }
+        
+        .opportunity-details {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .price {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .discount {
+            background: #e74c3c;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .yield {
+            background: #3498db;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .recommendation {
+            background: #f39c12;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
+        
+        .property-type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .property-type-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .type-count {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .type-name {
+            color: #7f8c8d;
+            margin-top: 0.5rem;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .load-data-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin: 1rem;
+        }
+        
+        .load-data-btn:hover {
+            background: #2980b9;
+        }
+        
+        .error-message {
+            background: #e74c3c;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+        
+        .success-message {
+            background: #27ae60;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Dashboard - Análise de Mercado Imobiliário</h1>
+        <p>Sistema Inteligente de Captação e Análise de Imóveis - São Paulo</p>
+        <button class="load-data-btn" onclick="loadMarketData()">🔄 Carregar Dados de Análise</button>
+    </div>
+
+    <div class="container">
+        <div id="loading-message" style="display: none;" class="success-message">
+            🔄 Carregando dados da análise de mercado...
+        </div>
+        
+        <div id="error-message" style="display: none;" class="error-message">
+            ❌ Erro ao carregar dados. Execute primeiro os scripts de análise: test_market_analyzer.py
+        </div>
+
+        <div id="dashboard-content" style="display: none;">
+            <div class="dashboard-grid">
+                <!-- Resumo Executivo -->
+                <div class="card">
+                    <h2>📋 Resumo Executivo</h2>
+                    <div id="executive-summary">
+                        <div class="metric">
+                            <span class="metric-label">Propriedades Analisadas</span>
+                            <span class="metric-value" id="total-properties">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Preço Médio</span>
+                            <span class="metric-value price" id="avg-price">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Área Média</span>
+                            <span class="metric-value" id="avg-area">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Faixa de Preços</span>
+                            <span class="metric-value" id="price-range">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Oportunidades</span>
+                            <span class="metric-value" id="total-opportunities">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Atividade do Mercado</span>
+                            <span class="metric-value" id="market-activity">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Distribuição por Tipo -->
+                <div class="card">
+                    <h2>🏠 Distribuição por Tipo</h2>
+                    <div id="property-types" class="property-type-grid">
+                        <!-- Será preenchido dinamicamente -->
+                    </div>
+                </div>
+
+                <!-- Estatísticas de Preço -->
+                <div class="card">
+                    <h2>💰 Estatísticas de Preço</h2>
+                    <div id="price-stats">
+                        <div class="metric">
+                            <span class="metric-label">Econômicas (até R$ 400k)</span>
+                            <span class="metric-value" id="budget-count">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Médio Padrão (R$ 400k-800k)</span>
+                            <span class="metric-value" id="mid-range-count">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Premium (R$ 800k-1.5M)</span>
+                            <span class="metric-value" id="premium-count">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Luxo (>R$ 1.5M)</span>
+                            <span class="metric-value" id="luxury-count">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ROI Analysis -->
+                <div class="card">
+                    <h2>📈 Análise de Rentabilidade</h2>
+                    <div id="roi-stats">
+                        <div class="metric">
+                            <span class="metric-label">Yield Médio</span>
+                            <span class="metric-value yield" id="avg-yield">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Payback Médio</span>
+                            <span class="metric-value" id="avg-payback">-</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Preço/m² Médio</span>
+                            <span class="metric-value price" id="avg-price-per-sqm">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Oportunidades -->
+            <div class="card">
+                <h2>🎯 Top 5 Oportunidades de Investimento</h2>
+                <div id="opportunities">
+                    <!-- Será preenchido dinamicamente -->
+                </div>
+            </div>
+
+            <!-- Melhores Investimentos para Renda -->
+            <div class="card">
+                <h2>💼 Melhores Investimentos para Renda</h2>
+                <div id="best-roi">
+                    <!-- Será preenchido dinamicamente -->
+                </div>
+            </div>
+
+            <!-- Recomendações -->
+            <div class="card">
+                <h2>💡 Recomendações Estratégicas</h2>
+                <div id="recommendations">
+                    <!-- Será preenchido dinamicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>🏠 Sistema de Análise e Captação de Imóveis | Desenvolvido com dados do VivaReal</p>
+        <p>📊 Análise baseada em propriedades reais do mercado de São Paulo</p>
+    </div>
+
+    <script>
+        async function loadMarketData() {
+            const loadingMsg = document.getElementById('loading-message');
+            const errorMsg = document.getElementById('error-message');
+            const dashboardContent = document.getElementById('dashboard-content');
+            
+            // Mostra loading
+            loadingMsg.style.display = 'block';
+            errorMsg.style.display = 'none';
+            dashboardContent.style.display = 'none';
+            
+            try {
+                // Tenta carregar o arquivo de relatório
+                const response = await fetch('./market_analysis_report.json');
+                
+                if (!response.ok) {
+                    throw new Error('Arquivo de dados não encontrado');
+                }
+                
+                const data = await response.json();
+                
+                // Popula o dashboard
+                populateDashboard(data);
+                
+                // Mostra o dashboard
+                loadingMsg.style.display = 'none';
+                dashboardContent.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                loadingMsg.style.display = 'none';
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        function populateDashboard(data) {
+            // Resumo Executivo
+            const execSummary = data.executive_summary || {};
+            document.getElementById('total-properties').textContent = data.analysis_metadata?.total_properties_analyzed || '-';
+            document.getElementById('avg-price').textContent = execSummary.average_price || '-';
+            document.getElementById('avg-area').textContent = execSummary.average_area || '-';
+            document.getElementById('price-range').textContent = execSummary.price_range || '-';
+            document.getElementById('total-opportunities').textContent = execSummary.total_opportunities || '-';
+            document.getElementById('market-activity').textContent = execSummary.market_activity || '-';
+
+            // Distribuição por Tipo
+            const propertyTypes = data.market_trends?.property_type_trends || {};
+            const typesContainer = document.getElementById('property-types');
+            typesContainer.innerHTML = '';
+            
+            for (const [type, typeData] of Object.entries(propertyTypes)) {
+                if (type !== 'N/A') {
+                    const typeItem = document.createElement('div');
+                    typeItem.className = 'property-type-item';
+                    typeItem.innerHTML = `
+                        <div class="type-count">${typeData.count}</div>
+                        <div class="type-name">${type}</div>
+                    `;
+                    typesContainer.appendChild(typeItem);
+                }
+            }
+
+            // Estatísticas de Preço
+            const priceBrackets = data.market_trends?.price_distribution?.price_brackets || {};
+            document.getElementById('budget-count').textContent = priceBrackets.budget || '0';
+            document.getElementById('mid-range-count').textContent = priceBrackets.mid_range || '0';
+            document.getElementById('premium-count').textContent = priceBrackets.premium || '0';
+            document.getElementById('luxury-count').textContent = priceBrackets.luxury || '0';
+
+            // ROI Stats
+            const roiAnalysis = data.roi_metrics?.rent_yield_analysis || [];
+            if (roiAnalysis.length > 0) {
+                const avgYield = roiAnalysis.reduce((sum, item) => sum + (item.rental_yield_percent || 0), 0) / roiAnalysis.length;
+                const avgPayback = roiAnalysis.reduce((sum, item) => sum + (item.payback_years || 0), 0) / roiAnalysis.length;
+                
+                document.getElementById('avg-yield').textContent = `${avgYield.toFixed(1)}% ao ano`;
+                document.getElementById('avg-payback').textContent = `${avgPayback.toFixed(1)} anos`;
+            }
+            
+            const marketSummary = data.market_trends?.market_summary || {};
+            document.getElementById('avg-price-per-sqm').textContent = 
+                marketSummary.avg_price_per_sqm ? `R$ ${marketSummary.avg_price_per_sqm.toLocaleString('pt-BR')}` : '-';
+
+            // Oportunidades
+            const opportunities = data.investment_opportunities || [];
+            const opportunitiesContainer = document.getElementById('opportunities');
+            opportunitiesContainer.innerHTML = '';
+            
+            opportunities.slice(0, 5).forEach((opp, index) => {
+                const prop = opp.property;
+                const oppItem = document.createElement('div');
+                oppItem.className = 'opportunity-item';
+                oppItem.innerHTML = `
+                    <div class="opportunity-header">
+                        ${index + 1}. ${prop.property_type || 'Propriedade'} - ${prop.neighborhood || 'N/A'}
+                        <span class="discount">${opp.discount_percentage}% OFF</span>
+                    </div>
+                    <div class="opportunity-details">
+                        💵 Preço: <span class="price">R$ ${(prop.price || 0).toLocaleString('pt-BR')}</span> | 
+                        📏 Área: ${prop.area || 0} m² | 
+                        💰 Economia: <span class="price">R$ ${(opp.savings_amount || 0).toLocaleString('pt-BR')}</span>
+                        <br>
+                        ⭐ Score: ${opp.opportunity_score}/50 | 
+                        📊 Preço/m²: R$ ${opp.property_price_per_sqm?.toLocaleString('pt-BR') || 0}
+                    </div>
+                `;
+                opportunitiesContainer.appendChild(oppItem);
+            });
+
+            // Melhores ROI
+            const bestRoi = data.roi_metrics?.rent_yield_analysis || [];
+            const roiContainer = document.getElementById('best-roi');
+            roiContainer.innerHTML = '';
+            
+            bestRoi.slice(0, 5).forEach((roi, index) => {
+                const prop = roi.property;
+                const roiItem = document.createElement('div');
+                roiItem.className = 'opportunity-item';
+                roiItem.innerHTML = `
+                    <div class="opportunity-header">
+                        ${index + 1}. ${prop.property_type || 'Propriedade'} - ${prop.neighborhood || 'N/A'}
+                        <span class="yield">${roi.rental_yield_percent}% Yield</span>
+                    </div>
+                    <div class="opportunity-details">
+                        💵 Investimento: <span class="price">R$ ${(prop.price || 0).toLocaleString('pt-BR')}</span> | 
+                        🏠 Aluguel: <span class="price">R$ ${(roi.estimated_monthly_rent || 0).toLocaleString('pt-BR')}/mês</span>
+                        <br>
+                        ⏱️ Payback: ${roi.payback_years || 'N/A'} anos | 
+                        ⭐ Score: ${roi.efficiency_score}/100
+                        <div class="recommendation">${roi.recommendation}</div>
+                    </div>
+                `;
+                roiContainer.appendChild(roiItem);
+            });
+
+            // Recomendações
+            const recommendations = data.recommendations || [];
+            const recsContainer = document.getElementById('recommendations');
+            recsContainer.innerHTML = '';
+            
+            recommendations.forEach((rec, index) => {
+                const recItem = document.createElement('div');
+                recItem.className = 'opportunity-item';
+                recItem.innerHTML = `
+                    <div class="opportunity-header">${index + 1}. Recomendação Estratégica</div>
+                    <div class="opportunity-details">${rec}</div>
+                `;
+                recsContainer.appendChild(recItem);
+            });
+        }
+
+        // Carrega dados automaticamente ao abrir a página
+        window.addEventListener('load', () => {
+            setTimeout(loadMarketData, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,720 @@
+{
+  "market_heat_index": {
+    "Parque Sao Jorge Sao": {
+      "heat_index": 26.2,
+      "classification": "FRIO - Baixa atividade",
+      "volume_score": 40,
+      "stability_score": 0,
+      "value_score": 47.4,
+      "property_count": 4,
+      "avg_price_per_sqm": 7114.657499999999
+    }
+  },
+  "investment_diversification": {
+    "by_property_type": {
+      "Apartamento": {
+        "count": 12,
+        "avg_investment": 648190,
+        "min_investment": 200000,
+        "max_investment": 950000,
+        "avg_price_per_sqm": 7681.48,
+        "risk_level": "ALTO",
+        "liquidity_score": 100
+      },
+      "Casa": {
+        "count": 7,
+        "avg_investment": 840000,
+        "min_investment": 530000,
+        "max_investment": 1550000,
+        "avg_price_per_sqm": 4223.98,
+        "risk_level": "ALTO",
+        "liquidity_score": 70
+      },
+      "Sobrado": {
+        "count": 2,
+        "avg_investment": 485000,
+        "min_investment": 320000,
+        "max_investment": 650000,
+        "avg_price_per_sqm": 4607.15,
+        "risk_level": "ALTO",
+        "liquidity_score": 20
+      }
+    },
+    "by_price_range": {
+      "entry_level": {
+        "count": 3,
+        "avg_area": 58,
+        "neighborhoods_available": 3,
+        "diversity_score": 2
+      },
+      "mid_range": {
+        "count": 11,
+        "avg_area": 117.4,
+        "neighborhoods_available": 9,
+        "diversity_score": 3
+      },
+      "premium": {
+        "count": 6,
+        "avg_area": 138,
+        "neighborhoods_available": 3,
+        "diversity_score": 2
+      },
+      "luxury": {
+        "count": 1,
+        "avg_area": 260,
+        "neighborhoods_available": 1,
+        "diversity_score": 1
+      }
+    },
+    "by_neighborhood": {},
+    "portfolio_recommendations": [
+      {
+        "strategy": "CONSERVADOR",
+        "allocation": {
+          "Apartamento": "60%",
+          "Casa": "30%",
+          "Sobrado": "10%"
+        },
+        "price_range_focus": "mid_range",
+        "expected_yield": "5-7% ao ano",
+        "risk_level": "Baixo"
+      },
+      {
+        "strategy": "MODERADO",
+        "allocation": {
+          "Apartamento": "50%",
+          "Casa": "35%",
+          "Sobrado": "15%"
+        },
+        "price_range_focus": "entry_level + mid_range",
+        "expected_yield": "6-9% ao ano",
+        "risk_level": "Médio"
+      },
+      {
+        "strategy": "AGRESSIVO",
+        "allocation": {
+          "Apartamento": "40%",
+          "Casa": "40%",
+          "Premium": "20%"
+        },
+        "price_range_focus": "premium + luxury",
+        "expected_yield": "8-12% ao ano",
+        "risk_level": "Alto"
+      }
+    ]
+  },
+  "comparative_analysis": {
+    "best_value_properties": [
+      {
+        "property": {
+          "url": "https://www.vivareal.com.br/imovel/casa-5-quartos-vila-da-saude-sao-paulo-com-garagem-270m2-venda-RS1500000-id-2822060165/?source=ranking%2Crp",
+          "raw_price": "R$ 1.500.000",
+          "raw_bedrooms": "Casa para comprar em\nVila da Saúde, São Paulo\nRua Artur Thiré\nTamanho do imóvel\n270 m²\nQuantidade de quartos\n5\nQuantidade de banheiros\n4\nQuantidade de vagas de garagem\n5\nR$ 1.500.000\nIPTU R$ 5.200\nWhatsApp\nContatar",
+          "raw_bathrooms": "Quantidade de banheiros\n4",
+          "raw_area": "Tamanho do imóvel\n270 m²",
+          "raw_parking_spaces": "Quantidade de vagas de garagem\n5",
+          "raw_address": "Casa 5 Quartos Vila Da Saude Sao Paulo Com Garagem 270M2 Venda Rs1500000 Id 2822060165",
+          "price": 1500000,
+          "bedrooms": 5,
+          "bathrooms": 4,
+          "area": 270,
+          "parking_spaces": 5,
+          "neighborhood": "Vila Da Saude Sao",
+          "property_type": "Casa",
+          "price_per_sqm": 5555.56,
+          "is_valid": true
+        },
+        "value_score": 88.9,
+        "price_score": 72.2,
+        "area_score": 100,
+        "rooms_score": 100
+      },
+      {
+        "property": {
+          "url": "https://www.vivareal.com.br/imovel/casa-3-quartos-jardim-sao-carlos-zona-leste-sao-paulo-com-garagem-200m2-venda-RS530000-id-2789242128/?source=ranking%2Crp",
+          "raw_price": "Casa para comprar em\nJardim São Carlos (Zona Leste), São Paulo\nRua Santa Rita do Jacutinga\nTamanho do imóvel\n200 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n1\nQuantidade de vagas de garagem\n4\nR$ 530.000\nWhatsApp\nContatar",
+          "raw_bedrooms": "Casa para comprar em\nJardim São Carlos (Zona Leste), São Paulo\nRua Santa Rita do Jacutinga\nTamanho do imóvel\n200 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n1\nQuantidade de vagas de garagem\n4\nR$ 530.000\nWhatsApp\nContatar",
+          "raw_bathrooms": "Quantidade de banheiros\n1",
+          "raw_area": "Tamanho do imóvel\n200 m²",
+          "raw_parking_spaces": "Quantidade de vagas de garagem\n4",
+          "raw_address": "Casa 3 Quartos Jardim Sao Carlos Zona Leste Sao Paulo Com Garagem 200M2 Venda Rs530000 Id 2789242128",
+          "price": 530000,
+          "bedrooms": 3,
+          "bathrooms": 1,
+          "area": 200,
+          "parking_spaces": 4,
+          "neighborhood": "Jardim Sao Carlos Zona",
+          "property_type": "Casa",
+          "price_per_sqm": 2650.0,
+          "is_valid": true
+        },
+        "value_score": 82.7,
+        "price_score": 86.8,
+        "area_score": 100.0,
+        "rooms_score": 60
+      },
+      {
+        "property": {
+          "url": "https://www.vivareal.com.br/imovel/casa-3-quartos-vila-antonio-dos-santos-sao-paulo-com-garagem-180m2-venda-RS590000-id-2822085974/?source=ranking%2Crp",
+          "raw_price": "R$ 590.000",
+          "raw_bedrooms": "Casa para comprar em\nVila Antônio dos Santos, São Paulo\nRua Orlando Chiodi\nTamanho do imóvel\n180 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n3\nQuantidade de vagas de garagem\n2\nR$ 590.000\nIPTU R$ 84\nWhatsApp\nContatar",
+          "raw_bathrooms": "Quantidade de banheiros\n3",
+          "raw_area": "Tamanho do imóvel\n180 m²",
+          "raw_parking_spaces": "Quantidade de vagas de garagem\n2",
+          "raw_address": "Casa 3 Quartos Vila Antonio Dos Santos Sao Paulo Com Garagem 180M2 Venda Rs590000 Id 2822085974",
+          "price": 590000,
+          "bedrooms": 3,
+          "bathrooms": 3,
+          "area": 180,
+          "parking_spaces": 2,
+          "neighborhood": "Vila Antonio Dos Santos",
+          "property_type": "Casa",
+          "price_per_sqm": 3277.78,
+          "is_valid": true
+        },
+        "value_score": 78.4,
+        "price_score": 83.6,
+        "area_score": 90.0,
+        "rooms_score": 60
+      },
+      {
+        "property": {
+          "url": "https://www.vivareal.com.br/imovel/casa-3-quartos-vila-gomes-cardim-sao-paulo-com-garagem-260m2-venda-RS1550000-id-2822063113/?source=ranking%2Crp",
+          "raw_price": "R$ 1.550.000",
+          "raw_bedrooms": "Casa para comprar em\nVila Gomes Cardim, São Paulo\nRua Marquês de Aracati\nTamanho do imóvel\n260 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n3\nQuantidade de vagas de garagem\n2\nR$ 1.550.000\nIPTU R$ 800\nWhatsApp\nContatar",
+          "raw_bathrooms": "Quantidade de banheiros\n3",
+          "raw_area": "Tamanho do imóvel\n260 m²",
+          "raw_parking_spaces": "Quantidade de vagas de garagem\n2",
+          "raw_address": "Casa 3 Quartos Vila Gomes Cardim Sao Paulo Com Garagem 260M2 Venda Rs1550000 Id 2822063113",
+          "price": 1550000,
+          "bedrooms": 3,
+          "bathrooms": 3,
+          "area": 260,
+          "parking_spaces": 2,
+          "neighborhood": "Vila Gomes Cardim Sao",
+          "property_type": "Casa",
+          "price_per_sqm": 5961.54,
+          "is_valid": true
+        },
+        "value_score": 76.1,
+        "price_score": 70.2,
+        "area_score": 100,
+        "rooms_score": 60
+      },
+      {
+        "property": {
+          "url": "https://www.vivareal.com.br/imovel/casa-3-quartos-jardim-guairaca-sao-paulo-com-garagem-154m2-venda-RS540000-id-2817649120/?source=ranking%2Crp",
+          "raw_price": "Casa para comprar em\nJardim Guairaca, São Paulo\nRua Antônio Marques Julião\nTamanho do imóvel\n154 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n4\nR$ 540.000\nWhatsApp\nContatar",
+          "raw_bedrooms": "Casa para comprar em\nJardim Guairaca, São Paulo\nRua Antônio Marques Julião\nTamanho do imóvel\n154 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n4\nR$ 540.000\nWhatsApp\nContatar",
+          "raw_bathrooms": "Quantidade de banheiros\n2",
+          "raw_area": "Tamanho do imóvel\n154 m²",
+          "raw_parking_spaces": "Quantidade de vagas de garagem\n4",
+          "raw_address": "Casa 3 Quartos Jardim Guairaca Sao Paulo Com Garagem 154M2 Venda Rs540000 Id 2817649120",
+          "price": 540000,
+          "bedrooms": 3,
+          "bathrooms": 2,
+          "area": 154,
+          "parking_spaces": 4,
+          "neighborhood": "Jardim Guairaca Sao Paulo",
+          "property_type": "Casa",
+          "price_per_sqm": 3506.49,
+          "is_valid": true
+        },
+        "value_score": 74.1,
+        "price_score": 82.5,
+        "area_score": 77.0,
+        "rooms_score": 60
+      },
+      {
+        "property": {
+          "url": "https://www.vivareal.com.br/imovel/casa-3-quartos-parque-edu-chaves-sao-paulo-com-garagem-142m2-venda-RS590000-id-2822064118/?source=ranking%2Crp",
+          "raw_price": "Casa para comprar em\nParque Edu Chaves, São Paulo\nRua Boaventura de Souza\nTamanho do imóvel\n142 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n2\nR$ 590.000\nWhatsApp\nContatar",
+          "raw_bedrooms": "Casa para comprar em\nParque Edu Chaves, São Paulo\nRua Boaventura de Souza\nTamanho do imóvel\n142 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n2\nR$ 590.000\nWhatsApp\nContatar",
+          "raw_bathrooms": "Quantidade de banheiros\n2",
+          "raw_area": "Tamanho do imóvel\n142 m²",
+          "raw_parking_spaces": "Quantidade de vagas de garagem\n2",
+          "raw_address": "Casa 3 Quartos Parque Edu Chaves Sao Paulo Com Garagem 142M2 Venda Rs590000 Id 2822064118",
+          "price": 590000,
+          "bedrooms": 3,
+          "bathrooms": 2,
+          "area": 142,
+          "parking_spaces": 2,
+          "neighborhood": "Parque Edu Chaves Sao",
+          "property_type": "Casa",
+          "price_per_sqm": 4154.93,
+          "is_valid": true
+        },
+        "value_score": 71.0,
+        "price_score": 79.2,
+        "area_score": 71.0,
+        "rooms_score": 60
+      }
+    ],
+    "growth_potential_areas": [],
+    "yield_champions": [],
+    "market_gaps": [
+      {
+        "gap_type": "property_type",
+        "description": "Baixa oferta de Sobrado",
+        "current_count": 2,
+        "market_share_percentage": 9.5,
+        "opportunity": "Nicho de mercado com potencial para Sobrado"
+      }
+    ]
+  },
+  "investment_scenarios_500k": {
+    "budget": 500000,
+    "single_property_scenarios": [
+      {
+        "strategy": "MAXIMIZAR ÁREA",
+        "properties": [
+          {
+            "url": "https://www.vivareal.com.br/imovel/sobrado-2-quartos-vila-re-sao-paulo-com-garagem-70m2-venda-RS320000-id-2822102057/?source=ranking%2Crp",
+            "raw_price": "Sobrado para comprar em\nVila Ré, São Paulo\nRua Pangauá\nTamanho do imóvel\n70 m²\nQuantidade de quartos\n2\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n1\nR$ 320.000\nPreço abaixo do mercado\nWhatsApp\nContatar",
+            "raw_bedrooms": "Sobrado para comprar em\nVila Ré, São Paulo\nRua Pangauá\nTamanho do imóvel\n70 m²\nQuantidade de quartos\n2\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n1\nR$ 320.000\nPreço abaixo do mercado\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n2",
+            "raw_area": "Tamanho do imóvel\n70 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n1",
+            "raw_address": "Sobrado 2 Quartos Vila Re Sao Paulo Com Garagem 70M2 Venda Rs320000 Id 2822102057",
+            "price": 320000,
+            "bedrooms": 2,
+            "bathrooms": 2,
+            "area": 70,
+            "parking_spaces": 1,
+            "neighborhood": "Vila Re Sao Paulo",
+            "property_type": "Sobrado",
+            "price_per_sqm": 4571.43,
+            "is_valid": true
+          },
+          {
+            "url": "https://www.vivareal.com.br/imovel/apartamento-2-quartos-vila-bertioga-sao-paulo-com-garagem-67m2-venda-RS500000-id-2822057327/?source=ranking%2Crp",
+            "raw_price": "R$ 500.000",
+            "raw_bedrooms": "Apartamento para comprar em\nVila Bertioga, São Paulo\nRua Jaboticabal\nTamanho do imóvel\n67 m²\nQuantidade de quartos\n2\nQuantidade de banheiros\n1\nQuantidade de vagas de garagem\n1\nR$ 500.000\nCond. R$ 819 • IPTU R$ 393\nPreço abaixo do mercado\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n1",
+            "raw_area": "Tamanho do imóvel\n67 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n1",
+            "raw_address": "Apartamento 2 Quartos Vila Bertioga Sao Paulo Com Garagem 67M2 Venda Rs500000 Id 2822057327",
+            "price": 500000,
+            "bedrooms": 2,
+            "bathrooms": 1,
+            "area": 67,
+            "parking_spaces": 1,
+            "neighborhood": "Vila Bertioga Sao Paulo",
+            "property_type": "Apartamento",
+            "price_per_sqm": 7462.69,
+            "is_valid": true
+          },
+          {
+            "url": "https://www.vivareal.com.br/imovel/apartamento-3-quartos-jardim-america-da-penha-sao-paulo-com-garagem-64m2-venda-RS360000-id-2822064524/?source=ranking%2Crp",
+            "raw_price": "R$ 360.000",
+            "raw_bedrooms": "Apartamento para comprar em\nJardim América da Penha, São Paulo\nRua Henrique Casela\nTamanho do imóvel\n64 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n1\nR$ 360.000\nCond. R$ 467 • IPTU R$ 155\nPreço abaixo do mercado\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n2",
+            "raw_area": "Tamanho do imóvel\n64 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n1",
+            "raw_address": "Apartamento 3 Quartos Jardim America Da Penha Sao Paulo Com Garagem 64M2 Venda Rs360000 Id 2822064524",
+            "price": 360000,
+            "bedrooms": 3,
+            "bathrooms": 2,
+            "area": 64,
+            "parking_spaces": 1,
+            "neighborhood": "Jardim America Da Penha",
+            "property_type": "Apartamento",
+            "price_per_sqm": 5625.0,
+            "is_valid": true
+          },
+          {
+            "url": "https://www.vivareal.com.br/imovel/apartamento-2-quartos-mooca-sao-paulo-com-garagem-59m2-venda-RS429280-id-2822114756/?source=ranking%2Crp",
+            "raw_price": "R$ 429.280",
+            "raw_bedrooms": "Apartamento para comprar em\nMooca, São Paulo\nRua do Oratório\nTamanho do imóvel\n59 m²\nQuantidade de quartos\n2\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n1\nR$ 429.280\nCond. R$ 707 • IPTU R$ 271\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n2",
+            "raw_area": "Tamanho do imóvel\n59 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n1",
+            "raw_address": "Apartamento 2 Quartos Mooca Sao Paulo Com Garagem 59M2 Venda Rs429280 Id 2822114756",
+            "price": 429280,
+            "bedrooms": 2,
+            "bathrooms": 2,
+            "area": 59,
+            "parking_spaces": 1,
+            "neighborhood": null,
+            "property_type": "Apartamento",
+            "price_per_sqm": 7275.93,
+            "is_valid": true
+          },
+          {
+            "url": "https://www.vivareal.com.br/imovel/apartamento-2-quartos-jardim-ipanema-zona-oeste-sao-paulo-40m2-venda-RS200000-id-2802726420/?source=ranking%2Crp",
+            "raw_price": "R$ 200.000",
+            "raw_bedrooms": "Apartamento para comprar em\nJardim Ipanema (Zona Oeste), São Paulo\nAvenida Alexios Jafet\nTamanho do imóvel\n40 m²\nQuantidade de quartos\n2\nQuantidade de banheiros\n1\nR$ 200.000\nCond. R$ 370\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n1",
+            "raw_area": "Tamanho do imóvel\n40 m²",
+            "raw_parking_spaces": null,
+            "raw_address": "Apartamento 2 Quartos Jardim Ipanema Zona Oeste Sao Paulo 40M2 Venda Rs200000 Id 2802726420",
+            "price": 200000,
+            "bedrooms": 2,
+            "bathrooms": 1,
+            "area": 40,
+            "parking_spaces": null,
+            "neighborhood": "Jardim Ipanema Zona Oeste",
+            "property_type": "Apartamento",
+            "price_per_sqm": 5000.0,
+            "is_valid": true
+          }
+        ],
+        "rationale": "Foco em maior espaço pelo orçamento"
+      },
+      {
+        "strategy": "MELHOR PREÇO/M²",
+        "properties": [
+          {
+            "url": "https://www.vivareal.com.br/imovel/sobrado-2-quartos-vila-re-sao-paulo-com-garagem-70m2-venda-RS320000-id-2822102057/?source=ranking%2Crp",
+            "raw_price": "Sobrado para comprar em\nVila Ré, São Paulo\nRua Pangauá\nTamanho do imóvel\n70 m²\nQuantidade de quartos\n2\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n1\nR$ 320.000\nPreço abaixo do mercado\nWhatsApp\nContatar",
+            "raw_bedrooms": "Sobrado para comprar em\nVila Ré, São Paulo\nRua Pangauá\nTamanho do imóvel\n70 m²\nQuantidade de quartos\n2\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n1\nR$ 320.000\nPreço abaixo do mercado\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n2",
+            "raw_area": "Tamanho do imóvel\n70 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n1",
+            "raw_address": "Sobrado 2 Quartos Vila Re Sao Paulo Com Garagem 70M2 Venda Rs320000 Id 2822102057",
+            "price": 320000,
+            "bedrooms": 2,
+            "bathrooms": 2,
+            "area": 70,
+            "parking_spaces": 1,
+            "neighborhood": "Vila Re Sao Paulo",
+            "property_type": "Sobrado",
+            "price_per_sqm": 4571.43,
+            "is_valid": true
+          },
+          {
+            "url": "https://www.vivareal.com.br/imovel/apartamento-2-quartos-jardim-ipanema-zona-oeste-sao-paulo-40m2-venda-RS200000-id-2802726420/?source=ranking%2Crp",
+            "raw_price": "R$ 200.000",
+            "raw_bedrooms": "Apartamento para comprar em\nJardim Ipanema (Zona Oeste), São Paulo\nAvenida Alexios Jafet\nTamanho do imóvel\n40 m²\nQuantidade de quartos\n2\nQuantidade de banheiros\n1\nR$ 200.000\nCond. R$ 370\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n1",
+            "raw_area": "Tamanho do imóvel\n40 m²",
+            "raw_parking_spaces": null,
+            "raw_address": "Apartamento 2 Quartos Jardim Ipanema Zona Oeste Sao Paulo 40M2 Venda Rs200000 Id 2802726420",
+            "price": 200000,
+            "bedrooms": 2,
+            "bathrooms": 1,
+            "area": 40,
+            "parking_spaces": null,
+            "neighborhood": "Jardim Ipanema Zona Oeste",
+            "property_type": "Apartamento",
+            "price_per_sqm": 5000.0,
+            "is_valid": true
+          },
+          {
+            "url": "https://www.vivareal.com.br/imovel/apartamento-3-quartos-jardim-america-da-penha-sao-paulo-com-garagem-64m2-venda-RS360000-id-2822064524/?source=ranking%2Crp",
+            "raw_price": "R$ 360.000",
+            "raw_bedrooms": "Apartamento para comprar em\nJardim América da Penha, São Paulo\nRua Henrique Casela\nTamanho do imóvel\n64 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n1\nR$ 360.000\nCond. R$ 467 • IPTU R$ 155\nPreço abaixo do mercado\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n2",
+            "raw_area": "Tamanho do imóvel\n64 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n1",
+            "raw_address": "Apartamento 3 Quartos Jardim America Da Penha Sao Paulo Com Garagem 64M2 Venda Rs360000 Id 2822064524",
+            "price": 360000,
+            "bedrooms": 3,
+            "bathrooms": 2,
+            "area": 64,
+            "parking_spaces": 1,
+            "neighborhood": "Jardim America Da Penha",
+            "property_type": "Apartamento",
+            "price_per_sqm": 5625.0,
+            "is_valid": true
+          },
+          {
+            "url": "https://www.vivareal.com.br/imovel/apartamento-2-quartos-mooca-sao-paulo-com-garagem-59m2-venda-RS429280-id-2822114756/?source=ranking%2Crp",
+            "raw_price": "R$ 429.280",
+            "raw_bedrooms": "Apartamento para comprar em\nMooca, São Paulo\nRua do Oratório\nTamanho do imóvel\n59 m²\nQuantidade de quartos\n2\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n1\nR$ 429.280\nCond. R$ 707 • IPTU R$ 271\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n2",
+            "raw_area": "Tamanho do imóvel\n59 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n1",
+            "raw_address": "Apartamento 2 Quartos Mooca Sao Paulo Com Garagem 59M2 Venda Rs429280 Id 2822114756",
+            "price": 429280,
+            "bedrooms": 2,
+            "bathrooms": 2,
+            "area": 59,
+            "parking_spaces": 1,
+            "neighborhood": null,
+            "property_type": "Apartamento",
+            "price_per_sqm": 7275.93,
+            "is_valid": true
+          },
+          {
+            "url": "https://www.vivareal.com.br/imovel/apartamento-2-quartos-vila-bertioga-sao-paulo-com-garagem-67m2-venda-RS500000-id-2822057327/?source=ranking%2Crp",
+            "raw_price": "R$ 500.000",
+            "raw_bedrooms": "Apartamento para comprar em\nVila Bertioga, São Paulo\nRua Jaboticabal\nTamanho do imóvel\n67 m²\nQuantidade de quartos\n2\nQuantidade de banheiros\n1\nQuantidade de vagas de garagem\n1\nR$ 500.000\nCond. R$ 819 • IPTU R$ 393\nPreço abaixo do mercado\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n1",
+            "raw_area": "Tamanho do imóvel\n67 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n1",
+            "raw_address": "Apartamento 2 Quartos Vila Bertioga Sao Paulo Com Garagem 67M2 Venda Rs500000 Id 2822057327",
+            "price": 500000,
+            "bedrooms": 2,
+            "bathrooms": 1,
+            "area": 67,
+            "parking_spaces": 1,
+            "neighborhood": "Vila Bertioga Sao Paulo",
+            "property_type": "Apartamento",
+            "price_per_sqm": 7462.69,
+            "is_valid": true
+          }
+        ],
+        "rationale": "Foco em melhor custo-benefício"
+      }
+    ],
+    "portfolio_scenarios": [
+      {
+        "range_label": "ENTRADA",
+        "price_range": "R$ 0 - R$ 200,000",
+        "avg_property_price": 200000,
+        "possible_property_count": 2,
+        "total_investment": 400000,
+        "remaining_budget": 100000,
+        "diversification_benefit": "Médio"
+      },
+      {
+        "range_label": "MÉDIO",
+        "price_range": "R$ 200,000 - R$ 350,000",
+        "avg_property_price": 260000,
+        "possible_property_count": 1,
+        "total_investment": 260000,
+        "remaining_budget": 240000,
+        "diversification_benefit": "Baixo"
+      },
+      {
+        "range_label": "PREMIUM",
+        "price_range": "R$ 350,000 - R$ 500,000",
+        "avg_property_price": 429760,
+        "possible_property_count": 1,
+        "total_investment": 429760,
+        "remaining_budget": 70240,
+        "diversification_benefit": "Baixo"
+      }
+    ],
+    "risk_return_analysis": {}
+  },
+  "investment_scenarios_1m": {
+    "budget": 1000000,
+    "single_property_scenarios": [
+      {
+        "strategy": "MAXIMIZAR ÁREA",
+        "properties": [
+          {
+            "url": "https://www.vivareal.com.br/imovel/casa-3-quartos-jardim-sao-carlos-zona-leste-sao-paulo-com-garagem-200m2-venda-RS530000-id-2789242128/?source=ranking%2Crp",
+            "raw_price": "Casa para comprar em\nJardim São Carlos (Zona Leste), São Paulo\nRua Santa Rita do Jacutinga\nTamanho do imóvel\n200 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n1\nQuantidade de vagas de garagem\n4\nR$ 530.000\nWhatsApp\nContatar",
+            "raw_bedrooms": "Casa para comprar em\nJardim São Carlos (Zona Leste), São Paulo\nRua Santa Rita do Jacutinga\nTamanho do imóvel\n200 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n1\nQuantidade de vagas de garagem\n4\nR$ 530.000\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n1",
+            "raw_area": "Tamanho do imóvel\n200 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n4",
+            "raw_address": "Casa 3 Quartos Jardim Sao Carlos Zona Leste Sao Paulo Com Garagem 200M2 Venda Rs530000 Id 2789242128",
+            "price": 530000,
+            "bedrooms": 3,
+            "bathrooms": 1,
+            "area": 200,
+            "parking_spaces": 4,
+            "neighborhood": "Jardim Sao Carlos Zona",
+            "property_type": "Casa",
+            "price_per_sqm": 2650.0,
+            "is_valid": true
+          },
+          {
+            "url": "https://www.vivareal.com.br/imovel/casa-3-quartos-vila-antonio-dos-santos-sao-paulo-com-garagem-180m2-venda-RS590000-id-2822085974/?source=ranking%2Crp",
+            "raw_price": "R$ 590.000",
+            "raw_bedrooms": "Casa para comprar em\nVila Antônio dos Santos, São Paulo\nRua Orlando Chiodi\nTamanho do imóvel\n180 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n3\nQuantidade de vagas de garagem\n2\nR$ 590.000\nIPTU R$ 84\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n3",
+            "raw_area": "Tamanho do imóvel\n180 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n2",
+            "raw_address": "Casa 3 Quartos Vila Antonio Dos Santos Sao Paulo Com Garagem 180M2 Venda Rs590000 Id 2822085974",
+            "price": 590000,
+            "bedrooms": 3,
+            "bathrooms": 3,
+            "area": 180,
+            "parking_spaces": 2,
+            "neighborhood": "Vila Antonio Dos Santos",
+            "property_type": "Casa",
+            "price_per_sqm": 3277.78,
+            "is_valid": true
+          },
+          {
+            "url": "https://www.vivareal.com.br/imovel/casa-3-quartos-jardim-guairaca-sao-paulo-com-garagem-154m2-venda-RS540000-id-2817649120/?source=ranking%2Crp",
+            "raw_price": "Casa para comprar em\nJardim Guairaca, São Paulo\nRua Antônio Marques Julião\nTamanho do imóvel\n154 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n4\nR$ 540.000\nWhatsApp\nContatar",
+            "raw_bedrooms": "Casa para comprar em\nJardim Guairaca, São Paulo\nRua Antônio Marques Julião\nTamanho do imóvel\n154 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n4\nR$ 540.000\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n2",
+            "raw_area": "Tamanho do imóvel\n154 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n4",
+            "raw_address": "Casa 3 Quartos Jardim Guairaca Sao Paulo Com Garagem 154M2 Venda Rs540000 Id 2817649120",
+            "price": 540000,
+            "bedrooms": 3,
+            "bathrooms": 2,
+            "area": 154,
+            "parking_spaces": 4,
+            "neighborhood": "Jardim Guairaca Sao Paulo",
+            "property_type": "Casa",
+            "price_per_sqm": 3506.49,
+            "is_valid": true
+          },
+          {
+            "url": "https://www.vivareal.com.br/imovel/casa-3-quartos-parque-edu-chaves-sao-paulo-com-garagem-142m2-venda-RS590000-id-2822064118/?source=ranking%2Crp",
+            "raw_price": "Casa para comprar em\nParque Edu Chaves, São Paulo\nRua Boaventura de Souza\nTamanho do imóvel\n142 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n2\nR$ 590.000\nWhatsApp\nContatar",
+            "raw_bedrooms": "Casa para comprar em\nParque Edu Chaves, São Paulo\nRua Boaventura de Souza\nTamanho do imóvel\n142 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n2\nR$ 590.000\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n2",
+            "raw_area": "Tamanho do imóvel\n142 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n2",
+            "raw_address": "Casa 3 Quartos Parque Edu Chaves Sao Paulo Com Garagem 142M2 Venda Rs590000 Id 2822064118",
+            "price": 590000,
+            "bedrooms": 3,
+            "bathrooms": 2,
+            "area": 142,
+            "parking_spaces": 2,
+            "neighborhood": "Parque Edu Chaves Sao",
+            "property_type": "Casa",
+            "price_per_sqm": 4154.93,
+            "is_valid": true
+          },
+          {
+            "url": "https://www.vivareal.com.br/imovel/sobrado-3-quartos-vila-pereira-cerca-sao-paulo-com-garagem-140m2-venda-RS650000-id-2579765615/?source=ranking%2Crp",
+            "raw_price": "R$ 650.000",
+            "raw_bedrooms": "Sobrado para comprar em\nVila Pereira Cerca, São Paulo\nTamanho do imóvel\n140 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n3\nQuantidade de vagas de garagem\n2\nR$ 650.000\nIPTU R$ 120\nPreço abaixo do mercado\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n3",
+            "raw_area": "Tamanho do imóvel\n140 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n2",
+            "raw_address": "Sobrado 3 Quartos Vila Pereira Cerca Sao Paulo Com Garagem 140M2 Venda Rs650000 Id 2579765615",
+            "price": 650000,
+            "bedrooms": 3,
+            "bathrooms": 3,
+            "area": 140,
+            "parking_spaces": 2,
+            "neighborhood": "Vila Pereira Cerca Sao",
+            "property_type": "Sobrado",
+            "price_per_sqm": 4642.86,
+            "is_valid": true
+          }
+        ],
+        "rationale": "Foco em maior espaço pelo orçamento"
+      },
+      {
+        "strategy": "MELHOR PREÇO/M²",
+        "properties": [
+          {
+            "url": "https://www.vivareal.com.br/imovel/casa-3-quartos-jardim-sao-carlos-zona-leste-sao-paulo-com-garagem-200m2-venda-RS530000-id-2789242128/?source=ranking%2Crp",
+            "raw_price": "Casa para comprar em\nJardim São Carlos (Zona Leste), São Paulo\nRua Santa Rita do Jacutinga\nTamanho do imóvel\n200 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n1\nQuantidade de vagas de garagem\n4\nR$ 530.000\nWhatsApp\nContatar",
+            "raw_bedrooms": "Casa para comprar em\nJardim São Carlos (Zona Leste), São Paulo\nRua Santa Rita do Jacutinga\nTamanho do imóvel\n200 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n1\nQuantidade de vagas de garagem\n4\nR$ 530.000\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n1",
+            "raw_area": "Tamanho do imóvel\n200 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n4",
+            "raw_address": "Casa 3 Quartos Jardim Sao Carlos Zona Leste Sao Paulo Com Garagem 200M2 Venda Rs530000 Id 2789242128",
+            "price": 530000,
+            "bedrooms": 3,
+            "bathrooms": 1,
+            "area": 200,
+            "parking_spaces": 4,
+            "neighborhood": "Jardim Sao Carlos Zona",
+            "property_type": "Casa",
+            "price_per_sqm": 2650.0,
+            "is_valid": true
+          },
+          {
+            "url": "https://www.vivareal.com.br/imovel/casa-3-quartos-vila-antonio-dos-santos-sao-paulo-com-garagem-180m2-venda-RS590000-id-2822085974/?source=ranking%2Crp",
+            "raw_price": "R$ 590.000",
+            "raw_bedrooms": "Casa para comprar em\nVila Antônio dos Santos, São Paulo\nRua Orlando Chiodi\nTamanho do imóvel\n180 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n3\nQuantidade de vagas de garagem\n2\nR$ 590.000\nIPTU R$ 84\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n3",
+            "raw_area": "Tamanho do imóvel\n180 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n2",
+            "raw_address": "Casa 3 Quartos Vila Antonio Dos Santos Sao Paulo Com Garagem 180M2 Venda Rs590000 Id 2822085974",
+            "price": 590000,
+            "bedrooms": 3,
+            "bathrooms": 3,
+            "area": 180,
+            "parking_spaces": 2,
+            "neighborhood": "Vila Antonio Dos Santos",
+            "property_type": "Casa",
+            "price_per_sqm": 3277.78,
+            "is_valid": true
+          },
+          {
+            "url": "https://www.vivareal.com.br/imovel/casa-3-quartos-jardim-guairaca-sao-paulo-com-garagem-154m2-venda-RS540000-id-2817649120/?source=ranking%2Crp",
+            "raw_price": "Casa para comprar em\nJardim Guairaca, São Paulo\nRua Antônio Marques Julião\nTamanho do imóvel\n154 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n4\nR$ 540.000\nWhatsApp\nContatar",
+            "raw_bedrooms": "Casa para comprar em\nJardim Guairaca, São Paulo\nRua Antônio Marques Julião\nTamanho do imóvel\n154 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n4\nR$ 540.000\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n2",
+            "raw_area": "Tamanho do imóvel\n154 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n4",
+            "raw_address": "Casa 3 Quartos Jardim Guairaca Sao Paulo Com Garagem 154M2 Venda Rs540000 Id 2817649120",
+            "price": 540000,
+            "bedrooms": 3,
+            "bathrooms": 2,
+            "area": 154,
+            "parking_spaces": 4,
+            "neighborhood": "Jardim Guairaca Sao Paulo",
+            "property_type": "Casa",
+            "price_per_sqm": 3506.49,
+            "is_valid": true
+          },
+          {
+            "url": "https://www.vivareal.com.br/imovel/casa-3-quartos-parque-edu-chaves-sao-paulo-com-garagem-142m2-venda-RS590000-id-2822064118/?source=ranking%2Crp",
+            "raw_price": "Casa para comprar em\nParque Edu Chaves, São Paulo\nRua Boaventura de Souza\nTamanho do imóvel\n142 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n2\nR$ 590.000\nWhatsApp\nContatar",
+            "raw_bedrooms": "Casa para comprar em\nParque Edu Chaves, São Paulo\nRua Boaventura de Souza\nTamanho do imóvel\n142 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n2\nQuantidade de vagas de garagem\n2\nR$ 590.000\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n2",
+            "raw_area": "Tamanho do imóvel\n142 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n2",
+            "raw_address": "Casa 3 Quartos Parque Edu Chaves Sao Paulo Com Garagem 142M2 Venda Rs590000 Id 2822064118",
+            "price": 590000,
+            "bedrooms": 3,
+            "bathrooms": 2,
+            "area": 142,
+            "parking_spaces": 2,
+            "neighborhood": "Parque Edu Chaves Sao",
+            "property_type": "Casa",
+            "price_per_sqm": 4154.93,
+            "is_valid": true
+          },
+          {
+            "url": "https://www.vivareal.com.br/imovel/casa-3-quartos-vila-costa-melo-sao-paulo-com-garagem-130m2-venda-RS580000-id-2745049801/?source=ranking%2Crp",
+            "raw_price": "Casa para comprar em\nVila Costa Melo, São Paulo\nRua Cachoeira de Santa Cruz\nTamanho do imóvel\n130 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n3\nQuantidade de vagas de garagem\n2\nR$ 580.000\nPreço abaixo do mercado\nWhatsApp\nContatar",
+            "raw_bedrooms": "Casa para comprar em\nVila Costa Melo, São Paulo\nRua Cachoeira de Santa Cruz\nTamanho do imóvel\n130 m²\nQuantidade de quartos\n3\nQuantidade de banheiros\n3\nQuantidade de vagas de garagem\n2\nR$ 580.000\nPreço abaixo do mercado\nWhatsApp\nContatar",
+            "raw_bathrooms": "Quantidade de banheiros\n3",
+            "raw_area": "Tamanho do imóvel\n130 m²",
+            "raw_parking_spaces": "Quantidade de vagas de garagem\n2",
+            "raw_address": "Casa 3 Quartos Vila Costa Melo Sao Paulo Com Garagem 130M2 Venda Rs580000 Id 2745049801",
+            "price": 580000,
+            "bedrooms": 3,
+            "bathrooms": 3,
+            "area": 130,
+            "parking_spaces": 2,
+            "neighborhood": "Vila Costa Melo Sao",
+            "property_type": "Casa",
+            "price_per_sqm": 4461.54,
+            "is_valid": true
+          }
+        ],
+        "rationale": "Foco em melhor custo-benefício"
+      }
+    ],
+    "portfolio_scenarios": [
+      {
+        "range_label": "ENTRADA",
+        "price_range": "R$ 0 - R$ 400,000",
+        "avg_property_price": 293333.33,
+        "possible_property_count": 3,
+        "total_investment": 880000.0,
+        "remaining_budget": 120000.0,
+        "diversification_benefit": "Alto"
+      },
+      {
+        "range_label": "MÉDIO",
+        "price_range": "R$ 400,000 - R$ 700,000",
+        "avg_property_price": 558116.36,
+        "possible_property_count": 1,
+        "total_investment": 558116.36,
+        "remaining_budget": 441883.64,
+        "diversification_benefit": "Baixo"
+      },
+      {
+        "range_label": "PREMIUM",
+        "price_range": "R$ 700,000 - R$ 1,000,000",
+        "avg_property_price": 911800,
+        "possible_property_count": 1,
+        "total_investment": 911800,
+        "remaining_budget": 88200,
+        "diversification_benefit": "Baixo"
+      }
+    ],
+    "risk_return_analysis": {}
+  },
+  "generation_timestamp": 1752893961.96925
+}
