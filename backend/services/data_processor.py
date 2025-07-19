@@ -397,10 +397,6 @@ class DataProcessorService:
             self.db.rollback()
             logging.error(f"Erro ao salvar imóveis no banco de dados: {e}")
             raise
-                processed_properties.append(processed_property)
-            except Exception as e:
-                self.logger.error(f"Erro ao processar propriedade: {e}")
-                continue
         
         # Filtra apenas propriedades válidas
         valid_properties = [p for p in processed_properties if p['is_valid']]

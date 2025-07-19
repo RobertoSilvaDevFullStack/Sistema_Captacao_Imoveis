@@ -1,0 +1,108 @@
+# simple_data_demo.py
+
+import json
+import logging
+from utils.logging_config import setup_logging
+
+# Configura logging
+setup_logging()
+
+def create_sample_data():
+    """Cria dados de amostra para demonstração"""
+    logging.info("🔄 Criando dados de amostra...")
+    
+    sample_properties = [
+        {
+            "url": "https://www.vivareal.com.br/imovel/apartamento-2-quartos-copacabana",
+            "titulo": "Apartamento 2 quartos em Copacabana",
+            "preco": 850000.0,
+            "quartos": 2,
+            "banheiros": 1,
+            "area": 65.0,
+            "vagas": 1,
+            "endereco": "Rua Barata Ribeiro, 123 - Copacabana",
+            "bairro": "Copacabana",
+            "tipo": "Apartamento",
+            "preco_por_m2": 13076.92,
+            "dados_validos": True,
+            "descricao": "Apartamento bem localizado em Copacabana",
+            "source": "vivareal"
+        },
+        {
+            "url": "https://www.vivareal.com.br/imovel/apartamento-3-quartos-ipanema",
+            "titulo": "Apartamento 3 quartos em Ipanema",
+            "preco": 1200000.0,
+            "quartos": 3,
+            "banheiros": 2,
+            "area": 90.0,
+            "vagas": 1,
+            "endereco": "Rua Visconde de Pirajá, 456 - Ipanema",
+            "bairro": "Ipanema",
+            "tipo": "Apartamento",
+            "preco_por_m2": 13333.33,
+            "dados_validos": True,
+            "descricao": "Apartamento amplo e bem ventilado",
+            "source": "vivareal"
+        },
+        {
+            "url": "https://www.vivareal.com.br/imovel/casa-4-quartos-barra",
+            "titulo": "Casa 4 quartos na Barra da Tijuca",
+            "preco": 1800000.0,
+            "quartos": 4,
+            "banheiros": 3,
+            "area": 200.0,
+            "vagas": 2,
+            "endereco": "Av. das Américas, 789 - Barra da Tijuca",
+            "bairro": "Barra da Tijuca",
+            "tipo": "Casa",
+            "preco_por_m2": 9000.0,
+            "dados_validos": True,
+            "descricao": "Casa espaçosa com quintal",
+            "source": "vivareal"
+        },
+        {
+            "url": "https://www.vivareal.com.br/imovel/apartamento-1-quarto-centro",
+            "titulo": "Apartamento 1 quarto no Centro",
+            "preco": 320000.0,
+            "quartos": 1,
+            "banheiros": 1,
+            "area": 35.0,
+            "vagas": 0,
+            "endereco": "Rua da Carioca, 101 - Centro",
+            "bairro": "Centro",
+            "tipo": "Apartamento",
+            "preco_por_m2": 9142.86,
+            "dados_validos": True,
+            "descricao": "Apartamento compacto no centro da cidade",
+            "source": "vivareal"
+        },
+        {
+            "url": "https://www.vivareal.com.br/imovel/apartamento-2-quartos-tijuca",
+            "titulo": "Apartamento 2 quartos na Tijuca",
+            "preco": 580000.0,
+            "quartos": 2,
+            "banheiros": 1,
+            "area": 70.0,
+            "vagas": 1,
+            "endereco": "Rua Conde de Bonfim, 234 - Tijuca",
+            "bairro": "Tijuca",
+            "tipo": "Apartamento",
+            "preco_por_m2": 8285.71,
+            "dados_validos": True,
+            "descricao": "Apartamento reformado com boa localização",
+            "source": "vivareal"
+        }
+    ]
+    
+    # Salva dados de amostra
+    with open('processed_properties.json', 'w', encoding='utf-8') as f:
+        json.dump(sample_properties, f, ensure_ascii=False, indent=2)
+    
+    logging.info(f"✅ {len(sample_properties)} propriedades de amostra criadas")
+    logging.info("📄 Arquivo 'processed_properties.json' salvo")
+    
+    return sample_properties
+
+if __name__ == "__main__":
+    create_sample_data()
+    logging.info("🎉 Dados de amostra criados com sucesso!")
