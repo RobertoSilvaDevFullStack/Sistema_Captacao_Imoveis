@@ -1,0 +1,279 @@
+# docker-compose-production.yml
+version: '3.8'
+
+services:
+  # Selenium Hub
+  selenium-hub:
+    image: selenium/hub:4.15.0
+    container_name: selenium-hub-prod
+    ports:
+      - "4444:4444"
+    environment:
+      - GRID_MAX_SESSION=20
+      - GRID_BROWSER_TIMEOUT=300
+      - GRID_TIMEOUT=300
+      - GRID_NEW_SESSION_WAIT_TIMEOUT=300
+      - SE_REGISTRATION_SECRET=MySecret123
+    networks:
+      - selenium-grid
+    volumes:
+      - ./logs/selenium:/var/log/selenium
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+
+  # Chrome Nodes - Otimizados para diferentes portais
+  chrome-zapimoveis:
+    image: selenium/node-chrome:4.15.0
+    container_name: chrome-zapimoveis
+    shm_size: 3gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=3
+      - NODE_MAX_SESSION=3
+      - SE_SCREEN_WIDTH=1366
+      - SE_SCREEN_HEIGHT=768
+      - SE_SCREEN_DEPTH=24
+      - SE_START_XVFB=true
+      - SE_REGISTRATION_SECRET=MySecret123
+      - SE_NODE_STEREOTYPE='{"browserName":"chrome","gsg:options":{"portal":"zapimoveis"}}'
+      - CHROME_OPTS=--disable-gpu --no-sandbox --disable-dev-shm-usage --disable-extensions
+    volumes:
+      - /dev/shm:/dev/shm
+      - ./downloads/zapimoveis:/home/seluser/Downloads
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.5'
+
+  chrome-olx:
+    image: selenium/node-chrome:4.15.0
+    container_name: chrome-olx
+    shm_size: 3gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=3
+      - NODE_MAX_SESSION=3
+      - SE_SCREEN_WIDTH=1920
+      - SE_SCREEN_HEIGHT=1080
+      - SE_SCREEN_DEPTH=24
+      - SE_START_XVFB=true
+      - SE_REGISTRATION_SECRET=MySecret123
+      - SE_NODE_STEREOTYPE='{"browserName":"chrome","gsg:options":{"portal":"olx"}}'
+      - CHROME_OPTS=--disable-gpu --no-sandbox --disable-dev-shm-usage --disable-images
+    volumes:
+      - /dev/shm:/dev/shm
+      - ./downloads/olx:/home/seluser/Downloads
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.5'
+
+  chrome-vivareal:
+    image: selenium/node-chrome:4.15.0
+    container_name: chrome-vivareal
+    shm_size: 3gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=3
+      - NODE_MAX_SESSION=3
+      - SE_SCREEN_WIDTH=1440
+      - SE_SCREEN_HEIGHT=900
+      - SE_SCREEN_DEPTH=24
+      - SE_START_XVFB=true
+      - SE_REGISTRATION_SECRET=MySecret123
+      - SE_NODE_STEREOTYPE='{"browserName":"chrome","gsg:options":{"portal":"vivareal"}}'
+      - CHROME_OPTS=--disable-gpu --no-sandbox --disable-dev-shm-usage
+    volumes:
+      - /dev/shm:/dev/shm
+      - ./downloads/vivareal:/home/seluser/Downloads
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.5'
+
+  # Chrome Headless para alta performance
+  chrome-headless-pool:
+    image: selenium/node-chrome:4.15.0
+    container_name: chrome-headless-pool
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=5
+      - NODE_MAX_SESSION=5
+      - SE_SCREEN_WIDTH=1366
+      - SE_SCREEN_HEIGHT=768
+      - SE_SCREEN_DEPTH=24
+      - SE_START_XVFB=true
+      - SE_REGISTRATION_SECRET=MySecret123
+      - SE_NODE_STEREOTYPE='{"browserName":"chrome","gsg:options":{"pool":"headless"}}'
+      - CHROME_OPTS=--headless --disable-gpu --no-sandbox --disable-dev-shm-usage --disable-images --disable-css
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 3G
+          cpus: '2.0'
+
+  # Firefox Node para diversificação
+  firefox-node:
+    image: selenium/node-firefox:4.15.0
+    container_name: firefox-node
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=2
+      - NODE_MAX_SESSION=2
+      - SE_SCREEN_WIDTH=1366
+      - SE_SCREEN_HEIGHT=768
+      - SE_SCREEN_DEPTH=24
+      - SE_START_XVFB=true
+      - SE_REGISTRATION_SECRET=MySecret123
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+
+  # Selenium Grid UI para monitoramento
+  selenium-ui:
+    image: selenium/grid-ui:4.15.0
+    container_name: selenium-ui-prod
+    depends_on:
+      - selenium-hub
+    ports:
+      - "4445:4445"
+    environment:
+      - GRID_HOST=selenium-hub
+      - GRID_PORT=4444
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+
+  # Redis para cache e rate limiting
+  redis:
+    image: redis:7-alpine
+    container_name: redis-scraping
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./config/redis.conf:/etc/redis/redis.conf
+    command: redis-server /etc/redis/redis.conf
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  # PostgreSQL para armazenamento
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-scraping
+    environment:
+      - POSTGRES_DB=scraping_db
+      - POSTGRES_USER=scraper
+      - POSTGRES_PASSWORD=scraper_pass_2024
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./config/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+
+  # Nginx para load balancing
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-scraping
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - selenium-hub
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+
+  # Monitor de recursos
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    privileged: true
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  postgres_data:
+
+networks:
+  selenium-grid:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

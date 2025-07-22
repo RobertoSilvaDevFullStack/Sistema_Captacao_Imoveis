@@ -1,0 +1,119 @@
+version: '3.8'
+
+services:
+  # Selenium Hub
+  selenium-hub:
+    image: selenium/hub:4.15.0
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"
+    environment:
+      - GRID_MAX_SESSION=10
+      - GRID_BROWSER_TIMEOUT=60
+      - GRID_TIMEOUT=60
+      - GRID_NEW_SESSION_WAIT_TIMEOUT=60
+    networks:
+      - selenium-grid
+
+  # Chrome Node 1
+  chrome-node-1:
+    image: selenium/node-chrome:4.15.0
+    container_name: chrome-node-1
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=2
+      - NODE_MAX_SESSION=2
+      - SE_SCREEN_WIDTH=1366
+      - SE_SCREEN_HEIGHT=768
+      - SE_SCREEN_DEPTH=24
+      - SE_START_XVFB=true
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      - selenium-grid
+
+  # Chrome Node 2
+  chrome-node-2:
+    image: selenium/node-chrome:4.15.0
+    container_name: chrome-node-2
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=2
+      - NODE_MAX_SESSION=2
+      - SE_SCREEN_WIDTH=1920
+      - SE_SCREEN_HEIGHT=1080
+      - SE_SCREEN_DEPTH=24
+      - SE_START_XVFB=true
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      - selenium-grid
+
+  # Chrome Node 3 (Headless)
+  chrome-node-3:
+    image: selenium/node-chrome:4.15.0
+    container_name: chrome-node-3
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=3
+      - NODE_MAX_SESSION=3
+      - SE_SCREEN_WIDTH=1440
+      - SE_SCREEN_HEIGHT=900
+      - SE_SCREEN_DEPTH=24
+      - SE_START_XVFB=true
+      - CHROME_OPTS=--headless --disable-gpu --no-sandbox --disable-dev-shm-usage
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      - selenium-grid
+
+  # Firefox Node
+  firefox-node:
+    image: selenium/node-firefox:4.15.0
+    container_name: firefox-node
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=2
+      - NODE_MAX_SESSION=2
+      - SE_SCREEN_WIDTH=1366
+      - SE_SCREEN_HEIGHT=768
+      - SE_SCREEN_DEPTH=24
+      - SE_START_XVFB=true
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      - selenium-grid
+
+  # Monitor para visualizar o grid
+  selenium-ui:
+    image: selenium/grid-ui:4.15.0
+    container_name: selenium-ui
+    depends_on:
+      - selenium-hub
+    ports:
+      - "4445:4445"
+    environment:
+      - GRID_HOST=selenium-hub
+      - GRID_PORT=4444
+    networks:
+      - selenium-grid
+
+networks:
+  selenium-grid:
+    driver: bridge
