@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Monitoramento - Sistema de Scraping</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .status-card {
+            border-left: 4px solid #28a745;
+            transition: all 0.3s ease;
+        }
+        .status-card.warning {
+            border-left-color: #ffc107;
+        }
+        .status-card.danger {
+            border-left-color: #dc3545;
+        }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        .alert-item {
+            border-left: 3px solid;
+            margin-bottom: 0.5rem;
+        }
+        .alert-warning {
+            border-left-color: #ffc107;
+            background-color: #fff3cd;
+        }
+        .alert-error {
+            border-left-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        .refresh-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .portal-health {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: bold;
+        }
+        .health-good { background-color: #d4edda; color: #155724; }
+        .health-fair { background-color: #fff3cd; color: #856404; }
+        .health-poor { background-color: #f8d7da; color: #721c24; }
+        .health-unknown { background-color: #e2e3e5; color: #383d41; }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">
+                <i class="fas fa-chart-line me-2"></i>
+                Dashboard de Monitoramento - Sistema de Scraping
+            </span>
+            <div class="d-flex align-items-center text-white">
+                <span id="last-update" class="me-3">Última atualização: --</span>
+                <button class="btn btn-outline-light btn-sm" onclick="refreshData()">
+                    <i class="fas fa-sync-alt"></i> Atualizar
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- Indicador de atualização -->
+        <div id="refresh-indicator" class="refresh-indicator alert alert-info d-none" role="alert">
+            <i class="fas fa-spinner fa-spin me-2"></i> Atualizando dados...
+        </div>
+
+        <!-- Alertas -->
+        <div id="alerts-section" class="row mb-4 d-none">
+            <div class="col-12">
+                <div class="card border-warning">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Alertas Ativos</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="alerts-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estatísticas do Sistema -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card status-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title text-muted">Uptime</h6>
+                                <div class="metric-value text-success" id="uptime">--</div>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-clock fa-2x text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card status-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title text-muted">Containers Ativos</h6>
+                                <div class="metric-value text-primary" id="containers">--</div>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fab fa-docker fa-2x text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card status-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title text-muted">Uso de CPU</h6>
+                                <div class="metric-value" id="cpu-usage">--</div>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-microchip fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card status-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title text-muted">Uso de Memória</h6>
+                                <div class="metric-value" id="memory-usage">--</div>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-memory fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estatísticas dos Portais -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-globe me-2"></i>Status dos Portais</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Portal</th>
+                                        <th>Status</th>
+                                        <th>Requisições</th>
+                                        <th>Taxa de Sucesso</th>
+                                        <th>Tempo Médio</th>
+                                        <th>Imóveis Coletados</th>
+                                        <th>Bloqueios</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="portals-table">
+                                    <!-- Dados carregados via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Requisições por Portal</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="portals-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Taxa de Sucesso</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="success-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Timeline -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-chart-area me-2"></i>Performance Timeline (24h)</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="height: 400px;">
+                            <canvas id="timeline-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logs e Containers -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-list me-2"></i>Logs Recentes</h5>
+                    </div>
+                    <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                        <div id="logs-container">
+                            <!-- Logs carregados via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fab fa-docker me-2"></i>Status dos Containers</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="containers-status">
+                            <!-- Status dos containers -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Variáveis globais
+        let charts = {};
+        let refreshInterval;
+
+        // Inicialização
+        $(document).ready(function() {
+            initializeCharts();
+            refreshData();
+            startAutoRefresh();
+        });
+
+        function initializeCharts() {
+            // Gráfico de requisições por portal
+            const ctx1 = document.getElementById('portals-chart').getContext('2d');
+            charts.portals = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['ZapImóveis', 'OLX', 'VivaReal'],
+                    datasets: [{
+                        data: [0, 0, 0],
+                        backgroundColor: ['#007bff', '#28a745', '#ffc107']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Gráfico de taxa de sucesso
+            const ctx2 = document.getElementById('success-chart').getContext('2d');
+            charts.success = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['ZapImóveis', 'OLX', 'VivaReal'],
+                    datasets: [{
+                        label: 'Taxa de Sucesso (%)',
+                        data: [0, 0, 0],
+                        backgroundColor: ['#007bff', '#28a745', '#ffc107']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de timeline
+            const ctx3 = document.getElementById('timeline-chart').getContext('2d');
+            charts.timeline = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'ZapImóveis',
+                            data: [],
+                            borderColor: '#007bff',
+                            tension: 0.1
+                        },
+                        {
+                            label: 'OLX',
+                            data: [],
+                            borderColor: '#28a745',
+                            tension: 0.1
+                        },
+                        {
+                            label: 'VivaReal',
+                            data: [],
+                            borderColor: '#ffc107',
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function refreshData() {
+            showRefreshIndicator();
+            
+            // Carregar estatísticas do sistema
+            $.get('/api/stats', function(data) {
+                updateSystemStats(data);
+            });
+
+            // Carregar estatísticas dos portais
+            $.get('/api/portals', function(data) {
+                updatePortalStats(data);
+                updateCharts(data);
+            });
+
+            // Carregar alertas
+            $.get('/api/alerts', function(data) {
+                updateAlerts(data);
+            });
+
+            // Carregar logs
+            $.get('/api/logs?limit=20', function(data) {
+                updateLogs(data);
+            });
+
+            // Carregar status dos containers
+            $.get('/api/containers', function(data) {
+                updateContainers(data);
+            });
+
+            // Carregar performance
+            $.get('/api/performance', function(data) {
+                updateTimeline(data);
+            });
+
+            hideRefreshIndicator();
+            $('#last-update').text('Última atualização: ' + new Date().toLocaleTimeString());
+        }
+
+        function updateSystemStats(data) {
+            $('#uptime').text(data.uptime_hours.toFixed(1) + 'h');
+            $('#containers').text(data.available_containers + '/' + data.total_containers);
+            
+            const cpuClass = data.cpu_usage > 80 ? 'text-danger' : (data.cpu_usage > 60 ? 'text-warning' : 'text-success');
+            $('#cpu-usage').text(data.cpu_usage.toFixed(1) + '%').removeClass().addClass('metric-value ' + cpuClass);
+            
+            const memClass = data.memory_usage > 80 ? 'text-danger' : (data.memory_usage > 60 ? 'text-warning' : 'text-success');
+            $('#memory-usage').text(data.memory_usage.toFixed(1) + '%').removeClass().addClass('metric-value ' + memClass);
+        }
+
+        function updatePortalStats(data) {
+            const tbody = $('#portals-table');
+            tbody.empty();
+
+            Object.keys(data).forEach(portal => {
+                const stats = data[portal];
+                const healthClass = 'health-' + stats.health_status;
+                const successClass = stats.success_rate > 80 ? 'text-success' : (stats.success_rate > 50 ? 'text-warning' : 'text-danger');
+                
+                const row = `
+                    <tr>
+                        <td><strong>${portal.charAt(0).toUpperCase() + portal.slice(1)}</strong></td>
+                        <td><span class="portal-health ${healthClass}">${stats.health_status}</span></td>
+                        <td>${stats.total_requests}</td>
+                        <td class="${successClass}">${stats.success_rate.toFixed(1)}%</td>
+                        <td>${stats.avg_response_time.toFixed(2)}s</td>
+                        <td>${stats.properties_scraped}</td>
+                        <td>${stats.blocked_requests}</td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+        }
+
+        function updateCharts(data) {
+            const portals = Object.keys(data);
+            const requests = portals.map(p => data[p].total_requests);
+            const successRates = portals.map(p => data[p].success_rate);
+            
+            // Atualizar gráfico de requisições
+            charts.portals.data.datasets[0].data = requests;
+            charts.portals.update();
+            
+            // Atualizar gráfico de taxa de sucesso
+            charts.success.data.datasets[0].data = successRates;
+            charts.success.update();
+        }
+
+        function updateTimeline(data) {
+            // Implementar atualização do timeline
+            // Este seria implementado com dados reais da API
+        }
+
+        function updateAlerts(data) {
+            if (data.length === 0) {
+                $('#alerts-section').addClass('d-none');
+                return;
+            }
+
+            $('#alerts-section').removeClass('d-none');
+            const container = $('#alerts-container');
+            container.empty();
+
+            data.forEach(alert => {
+                const alertClass = alert.type === 'error' ? 'alert-error' : 'alert-warning';
+                const iconClass = alert.type === 'error' ? 'fas fa-exclamation-circle' : 'fas fa-exclamation-triangle';
+                
+                const alertHtml = `
+                    <div class="alert-item ${alertClass} p-2 mb-2">
+                        <i class="${iconClass} me-2"></i>
+                        <strong>${alert.source}:</strong> ${alert.message}
+                        <small class="text-muted float-end">${new Date(alert.timestamp).toLocaleTimeString()}</small>
+                    </div>
+                `;
+                container.append(alertHtml);
+            });
+        }
+
+        function updateLogs(data) {
+            const container = $('#logs-container');
+            container.empty();
+
+            if (data.length === 0) {
+                container.append('<p class="text-muted">Nenhum log recente</p>');
+                return;
+            }
+
+            data.forEach(log => {
+                const logClass = log.level === 'ERROR' ? 'text-danger' : (log.level === 'WARNING' ? 'text-warning' : 'text-muted');
+                const logHtml = `
+                    <div class="border-bottom pb-2 mb-2">
+                        <div class="d-flex justify-content-between">
+                            <span class="${logClass}">[${log.level}]</span>
+                            <small class="text-muted">${new Date(log.timestamp).toLocaleTimeString()}</small>
+                        </div>
+                        <div>${log.message}</div>
+                    </div>
+                `;
+                container.append(logHtml);
+            });
+        }
+
+        function updateContainers(data) {
+            const container = $('#containers-status');
+            
+            if (data.error) {
+                container.html(`<div class="alert alert-warning">${data.error}</div>`);
+                return;
+            }
+
+            const statusHtml = `
+                <div class="row">
+                    <div class="col-6">
+                        <div class="text-center">
+                            <div class="h4 text-primary">${data.available_containers}</div>
+                            <div class="text-muted">Disponíveis</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center">
+                            <div class="h4 text-info">${data.busy_containers}</div>
+                            <div class="text-muted">Em Uso</div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="small">
+                    <div><strong>Total:</strong> ${data.total_containers}</div>
+                    <div><strong>Saudáveis:</strong> ${data.healthy_containers}</div>
+                </div>
+            `;
+            
+            container.html(statusHtml);
+        }
+
+        function showRefreshIndicator() {
+            $('#refresh-indicator').removeClass('d-none');
+        }
+
+        function hideRefreshIndicator() {
+            $('#refresh-indicator').addClass('d-none');
+        }
+
+        function startAutoRefresh() {
+            refreshInterval = setInterval(refreshData, 30000); // 30 segundos
+        }
+
+        function stopAutoRefresh() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        }
+
+        // Refresh manual
+        function manualRefresh() {
+            stopAutoRefresh();
+            refreshData();
+            startAutoRefresh();
+        }
+    </script>
+</body>
+</html>

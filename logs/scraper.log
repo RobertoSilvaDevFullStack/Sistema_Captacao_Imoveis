@@ -3381,3 +3381,68 @@ Stacktrace:
 2025-07-19 18:24:09,822 INFO root ZapImóveis retornou 10 propriedades
 2025-07-19 18:24:09,823 INFO werkzeug 127.0.0.1 - - [19/Jul/2025 18:24:09] "GET /api/properties/search?city=rio-de-janeiro&property_type=apartamento&portal=zapimoveis&max_results=3 HTTP/1.1" 200 -
 2025-07-19 18:41:02,275 INFO werkzeug 127.0.0.1 - - [19/Jul/2025 18:41:02] "GET /api/scrapers/status HTTP/1.1" 200 -
+2025-07-19 19:41:03,066 INFO werkzeug 127.0.0.1 - - [19/Jul/2025 19:41:03] "GET /api/scrapers/status HTTP/1.1" 200 -
+2025-07-19 19:41:13,704 INFO root Buscando propriedades: rio-de-janeiro, apartamento, zapimoveis
+2025-07-19 19:41:13,726 INFO WDM ====== WebDriver manager ======
+2025-07-19 19:41:15,000 INFO WDM Get LATEST chromedriver version for google-chrome
+2025-07-19 19:41:15,666 INFO WDM Get LATEST chromedriver version for google-chrome
+2025-07-19 19:41:16,198 INFO WDM Driver [C:\Users\rober\.wdm\drivers\chromedriver\win64\138.0.7204.157\chromedriver-win32/chromedriver.exe] found in cache
+2025-07-19 19:41:17,679 INFO root Iniciando scraping ZapImóveis: https://www.zapimoveis.com.br/venda/apartamentos/rj+rio-de-janeiro/
+2025-07-19 19:41:17,737 INFO root Buscando links em: https://www.zapimoveis.com.br/venda/apartamentos/rj+rio-de-janeiro/
+2025-07-19 19:41:24,989 INFO root Processando página 1
+2025-07-19 19:41:30,640 INFO root Encontrados 70 elementos com seletor: a[href*="/imovel/"]
+2025-07-19 19:41:31,027 INFO root Encontrados 45 links únicos na página 1
+2025-07-19 19:41:35,985 INFO root Processando página 2
+2025-07-19 19:41:41,352 INFO root Encontrados 50 elementos com seletor: a[href*="/imovel/"]
+2025-07-19 19:41:41,624 INFO root Encontrados 0 links únicos na página 2
+2025-07-19 19:41:46,481 INFO root Processando página 3
+2025-07-19 19:41:51,800 INFO root Encontrados 50 elementos com seletor: a[href*="/imovel/"]
+2025-07-19 19:41:52,075 INFO root Encontrados 0 links únicos na página 3
+2025-07-19 19:41:52,075 INFO root Total de 45 links únicos encontrados
+2025-07-19 19:41:52,075 INFO root Extraindo detalhes de 10 propriedades...
+2025-07-19 19:41:52,076 INFO root Processando propriedade 1/10
+2025-07-19 19:41:52,081 INFO root Extraindo dados de: https://www.zapimoveis.com.br/imovel/venda-apartamento-3-quartos-com-elevador-jardim-oceanico-zona-oeste-rio-de-janeiro-rj-160m2-id-2821468424/?source=ranking%2Crp
+2025-07-19 19:42:03,066 WARNING root AVISO - Dados incompletos extraídos de https://www.zapimoveis.com.br/imovel/venda-apartamento-3-quartos-com-elevador-jardim-oceanico-zona-oeste-rio-de-janeiro-rj-160m2-id-2821468424/?source=ranking%2Crp
+2025-07-19 19:42:03,082 INFO root OK - Propriedade 1 processada com sucesso
+2025-07-19 19:42:08,196 INFO root Processando propriedade 2/10
+2025-07-19 19:42:08,201 INFO root Extraindo dados de: https://www.zapimoveis.com.br/imovel/venda-apartamento-3-quartos-com-interfone-botafogo-zona-sul-rio-de-janeiro-rj-96m2-id-2782534959/?source=ranking%2Crp
+2025-07-19 19:42:20,247 WARNING root AVISO - Dados incompletos extraídos de https://www.zapimoveis.com.br/imovel/venda-apartamento-3-quartos-com-interfone-botafogo-zona-sul-rio-de-janeiro-rj-96m2-id-2782534959/?source=ranking%2Crp
+2025-07-19 19:42:20,248 INFO root OK - Propriedade 2 processada com sucesso
+2025-07-19 19:42:25,467 INFO root Processando propriedade 3/10
+2025-07-19 19:42:25,472 INFO root Extraindo dados de: https://www.zapimoveis.com.br/imovel/venda-apartamento-3-quartos-com-elevador-copacabana-zona-sul-rio-de-janeiro-rj-140m2-id-2770383726/?source=ranking%2Crp
+2025-07-19 19:42:38,342 WARNING root AVISO - Dados incompletos extraídos de https://www.zapimoveis.com.br/imovel/venda-apartamento-3-quartos-com-elevador-copacabana-zona-sul-rio-de-janeiro-rj-140m2-id-2770383726/?source=ranking%2Crp
+2025-07-19 19:42:38,343 INFO root OK - Propriedade 3 processada com sucesso
+2025-07-19 19:42:41,423 INFO root Processando propriedade 4/10
+2025-07-19 19:42:41,427 INFO root Extraindo dados de: https://www.zapimoveis.com.br/imovel/venda-apartamento-3-quartos-mobiliado-botafogo-rio-de-janeiro-94m2-id-2821910618/?source=ranking%2Crp
+2025-07-19 19:42:53,889 WARNING root AVISO - Dados incompletos extraídos de https://www.zapimoveis.com.br/imovel/venda-apartamento-3-quartos-mobiliado-botafogo-rio-de-janeiro-94m2-id-2821910618/?source=ranking%2Crp
+2025-07-19 19:42:53,889 INFO root OK - Propriedade 4 processada com sucesso
+2025-07-19 19:42:58,921 INFO root Processando propriedade 5/10
+2025-07-19 19:42:58,926 INFO root Extraindo dados de: https://www.zapimoveis.com.br/imovel/venda-apartamento-1-quarto-com-cozinha-laranjeiras-rio-de-janeiro-48m2-id-2822469186/?source=ranking%2Crp
+2025-07-19 19:43:10,276 WARNING root AVISO - Dados incompletos extraídos de https://www.zapimoveis.com.br/imovel/venda-apartamento-1-quarto-com-cozinha-laranjeiras-rio-de-janeiro-48m2-id-2822469186/?source=ranking%2Crp
+2025-07-19 19:43:10,277 INFO root OK - Propriedade 5 processada com sucesso
+2025-07-19 19:43:15,857 INFO root Processando propriedade 6/10
+2025-07-19 19:43:15,862 INFO root Extraindo dados de: https://www.zapimoveis.com.br/imovel/venda-apartamento-2-quartos-com-churrasqueira-pechincha-rio-de-janeiro-67m2-id-2659502066/?source=ranking%2Crp
+2025-07-19 19:43:28,427 WARNING root AVISO - Dados incompletos extraídos de https://www.zapimoveis.com.br/imovel/venda-apartamento-2-quartos-com-churrasqueira-pechincha-rio-de-janeiro-67m2-id-2659502066/?source=ranking%2Crp
+2025-07-19 19:43:28,427 INFO root OK - Propriedade 6 processada com sucesso
+2025-07-19 19:43:32,538 INFO root Processando propriedade 7/10
+2025-07-19 19:43:32,548 INFO root Extraindo dados de: https://www.zapimoveis.com.br/imovel/venda-apartamento-3-quartos-laranjeiras-rio-de-janeiro-105m2-id-2822471942/?source=ranking%2Crp
+2025-07-19 19:43:44,969 WARNING root AVISO - Dados incompletos extraídos de https://www.zapimoveis.com.br/imovel/venda-apartamento-3-quartos-laranjeiras-rio-de-janeiro-105m2-id-2822471942/?source=ranking%2Crp
+2025-07-19 19:43:44,969 INFO root OK - Propriedade 7 processada com sucesso
+2025-07-19 19:43:48,126 INFO root Processando propriedade 8/10
+2025-07-19 19:43:48,131 INFO root Extraindo dados de: https://www.zapimoveis.com.br/imovel/venda-apartamento-2-quartos-com-cozinha-taquara-rio-de-janeiro-67m2-id-2820622628/?source=ranking%2Crp
+2025-07-19 19:44:01,588 WARNING root AVISO - Dados incompletos extraídos de https://www.zapimoveis.com.br/imovel/venda-apartamento-2-quartos-com-cozinha-taquara-rio-de-janeiro-67m2-id-2820622628/?source=ranking%2Crp
+2025-07-19 19:44:01,589 INFO root OK - Propriedade 8 processada com sucesso
+2025-07-19 19:44:06,163 INFO root Processando propriedade 9/10
+2025-07-19 19:44:06,168 INFO root Extraindo dados de: https://www.zapimoveis.com.br/imovel/venda-apartamento-1-quarto-com-churrasqueira-catete-rio-de-janeiro-67m2-id-2822469567/?source=ranking%2Crp
+2025-07-19 19:44:17,741 WARNING root AVISO - Dados incompletos extraídos de https://www.zapimoveis.com.br/imovel/venda-apartamento-1-quarto-com-churrasqueira-catete-rio-de-janeiro-67m2-id-2822469567/?source=ranking%2Crp
+2025-07-19 19:44:17,741 INFO root OK - Propriedade 9 processada com sucesso
+2025-07-19 19:44:23,710 INFO root Processando propriedade 10/10
+2025-07-19 19:44:23,716 INFO root Extraindo dados de: https://www.zapimoveis.com.br/imovel/venda-apartamento-2-quartos-com-cozinha-catete-rio-de-janeiro-78m2-id-2822469191/?source=ranking%2Crp
+2025-07-19 19:44:36,301 WARNING root AVISO - Dados incompletos extraídos de https://www.zapimoveis.com.br/imovel/venda-apartamento-2-quartos-com-cozinha-catete-rio-de-janeiro-78m2-id-2822469191/?source=ranking%2Crp
+2025-07-19 19:44:36,301 INFO root OK - Propriedade 10 processada com sucesso
+2025-07-19 19:44:39,956 INFO root Scraping ZapImóveis concluído! 10 propriedades extraídas.
+2025-07-19 19:44:42,336 INFO root ZapImóveis Scraper fechado.
+2025-07-19 19:44:42,337 INFO root ZapImóveis retornou 10 propriedades
+2025-07-19 19:44:42,343 INFO werkzeug 127.0.0.1 - - [19/Jul/2025 19:44:42] "GET /api/properties/search?city=rio-de-janeiro&property_type=apartamento&portal=zapimoveis&max_results=3 HTTP/1.1" 200 -
+2025-07-19 19:45:13,121 INFO root A rota raiz ('/') foi acessada.
+2025-07-19 19:45:13,122 INFO werkzeug 127.0.0.1 - - [19/Jul/2025 19:45:13] "GET / HTTP/1.1" 200 -

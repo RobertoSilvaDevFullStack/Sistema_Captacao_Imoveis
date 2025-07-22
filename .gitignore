@@ -40,6 +40,7 @@ scraper_*.log
 # Database
 *.db
 *.sqlite3
+*.sqlite
 
 # Selenium
 *.log
@@ -62,7 +63,113 @@ temp/
 *.json
 !package.json
 !requirements*.txt
+!tsconfig.json
+!tailwind.config.js
 
 # Screenshots and debug files
 screenshots/
 debug_*.html
+
+# Node.js dependencies
+node_modules/
+*/node_modules/
+**/node_modules/
+/frontend/node_modules/
+.npm
+.cache/
+*/.cache/
+**/.cache/
+
+# Python virtual environment
+/venv
+venv/
+.venv/
+
+# Logs directory
+/logs
+logs/
+
+# Frontend build and cache files
+/frontend/build
+/frontend/.cache
+/frontend/dist
+build/
+dist/
+
+# Environment files (contain passwords and keys)
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Large files (>100MB)
+*.zip
+*.tar.gz
+*.rar
+*.7z
+*.iso
+*.dmg
+*.exe
+*.msi
+
+# Media files that could be large
+*.mp4
+*.avi
+*.mkv
+*.mov
+*.wmv
+*.flv
+*.webm
+
+# Archive files
+*.tar
+*.gz
+*.bz2
+*.xz
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Cache directories
+.cache/
+.pytest_cache/
+.mypy_cache/
+.tox/
+.coverage
+htmlcov/
+
+# PyCharm
+.idea/
+*.iml
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Docker
+.dockerignore
+
+# Local database files
+local_database.db
+
+# Scraped data files (can be large)
+properties_data.json
+properties_listing_data.json
+processed_properties_data.json
+processed_properties.json
+
+# Test output files
+test_output/
+test_results/

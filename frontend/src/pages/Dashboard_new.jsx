@@ -99,6 +99,11 @@ const RealEstateDashboard = () => {
     fetchScrapersStatus();
   };
 
+  // Abrir Simple Dashboard em nova aba
+  const openSimpleDashboard = () => {
+    window.open('http://localhost:5001', '_blank');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -119,6 +124,14 @@ const RealEstateDashboard = () => {
                   Última atualização: {lastUpdate}
                 </div>
               )}
+              
+              <button
+                onClick={openSimpleDashboard}
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Dashboard de Monitoramento
+              </button>
               
               <button
                 onClick={handleRefresh}
@@ -164,6 +177,38 @@ const RealEstateDashboard = () => {
             onSearch={handleSearch}
             isLoading={isLoading}
           />
+        </div>
+
+        {/* Acesso Rápido ao Dashboard de Monitoramento */}
+        <div className="mb-6">
+          <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold mb-2">📊 Dashboard de Monitoramento Avançado</h3>
+                <p className="text-blue-100 mb-3">
+                  Acesse métricas detalhadas, logs em tempo real e estatísticas dos portais de scraping
+                </p>
+                <ul className="text-sm text-blue-100 space-y-1">
+                  <li>• Status detalhado dos portais (ZapImóveis, OLX, VivaReal)</li>
+                  <li>• Logs do sistema em tempo real</li>
+                  <li>• Gráficos de performance e alertas</li>
+                  <li>• Estatísticas de CPU, memória e containers</li>
+                </ul>
+              </div>
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={openSimpleDashboard}
+                  className="flex items-center gap-2 px-6 py-3 bg-white text-blue-600 rounded-lg hover:bg-gray-50 font-medium shadow-md transition-all duration-200 transform hover:scale-105"
+                >
+                  <ExternalLink className="w-5 h-5" />
+                  Abrir Dashboard
+                </button>
+                <div className="text-xs text-blue-200 text-center">
+                  Abre em nova aba
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Mensagem de Erro */}

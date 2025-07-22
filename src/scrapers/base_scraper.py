@@ -24,6 +24,10 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from models.property import Property, PropertySearch, ScrapingResult, PropertySource, PropertyType
 from config.settings import settings
+from utils.header_rotator import header_rotator
+from utils.rate_limiter import rate_manager
+from utils.proxy_rotator import proxy_manager
+from utils.selenium_proxy_config import selenium_proxy_config
 
 class BaseScraper(ABC):
     """Classe base para scrapers"""
@@ -33,30 +37,52 @@ class BaseScraper(ABC):
         self.logger = logging.getLogger(f'scraper.{source.value}')
         self.driver: Optional[webdriver.Chrome] = None
         self.config = settings.SCRAPER
+        self.current_proxy = None  # Proxy em uso atualmente
         
     def _setup_driver(self) -> webdriver.Chrome:
-        """Configura o driver do Selenium com opções otimizadas"""
+        """Configura o driver do Selenium com opções otimizadas e proxy"""
         chrome_options = Options()
         
-        # Configurações anti-detecção
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--disable-dev-shm-usage')
-        chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+        # Usar opções do header_rotator para anti-detecção
+        portal_name = self.source.value.lower()
+        selenium_options = header_rotator.get_selenium_options(portal_name)
+        
+        for option in selenium_options:
+            chrome_options.add_argument(option)
+        
+        # Configurar proxy se disponível
+        try:
+            self.current_proxy = proxy_manager.get_proxy_for_request()
+            if self.current_proxy:
+                self.logger.info(f"Usando proxy: {self.current_proxy.ip}:{self.current_proxy.port}")
+                
+                # Usar configuração de proxy do selenium_proxy_config
+                proxy_options = selenium_proxy_config.configure_chrome_with_proxy(self.current_proxy)
+                
+                # Merge das opções
+                for arg in proxy_options.arguments:
+                    if arg not in chrome_options.arguments:
+                        chrome_options.add_argument(arg)
+                        
+                # Adicionar extensões de proxy se necessário
+                for extension in proxy_options.extensions:
+                    chrome_options.add_extension(extension)
+                    
+            else:
+                self.logger.warning("Nenhum proxy disponível - usando conexão direta")
+                
+        except Exception as e:
+            self.logger.warning(f"Erro ao configurar proxy: {e} - usando conexão direta")
+            self.current_proxy = None
+        
+        # Configurações extras anti-detecção
         chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
         chrome_options.add_experimental_option('useAutomationExtension', False)
         
         # Configurações de performance
         chrome_options.add_argument('--disable-images')
-        chrome_options.add_argument('--disable-javascript')
         chrome_options.add_argument('--disable-plugins')
         chrome_options.add_argument('--disable-extensions')
-        
-        # User agent aleatório
-        user_agents = self.config.user_agents or []
-        user_agent = None
-        if user_agents:
-            user_agent = random.choice(user_agents)
-            chrome_options.add_argument(f'--user-agent={user_agent}')
         
         # Inicializar driver
         service = Service(ChromeDriverManager().install())
@@ -64,10 +90,6 @@ class BaseScraper(ABC):
         
         # Configurações extras anti-detecção
         driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
-        if user_agent:
-            driver.execute_cdp_cmd('Network.setUserAgentOverride', {
-                "userAgent": user_agent
-            })
         
         return driver
     
@@ -145,9 +167,13 @@ class BaseScraper(ABC):
         """Executa scraping de propriedades"""
         start_time = time.time()
         result = ScrapingResult(source=self.source)
+        portal_name = self.source.value.lower()
         
         try:
             self.logger.info(f"Iniciando scraping: {search.city}, {search.property_type.value}")
+            
+            # Aplicar rate limiting antes de começar
+            rate_manager.wait_for_portal(portal_name)
             
             # Configurar driver
             self.driver = self._setup_driver()
@@ -155,6 +181,14 @@ class BaseScraper(ABC):
             # Construir URL e navegar
             url = self._build_search_url(search)
             self.logger.info(f"Navegando para: {url}")
+            
+            # Aplicar headers customizados se possível
+            try:
+                headers = header_rotator.get_random_headers(portal_name)
+                self.driver.execute_cdp_cmd('Network.setRequestHeaders', {'headers': headers})
+            except Exception as e:
+                self.logger.warning(f"Não foi possível definir headers customizados: {e}")
+            
             self.driver.get(url)
             
             # Aguardar carregamento
@@ -184,12 +218,28 @@ class BaseScraper(ABC):
             result.total_found = len(properties)
             result.success = True
             
+            # Registrar sucesso no rate manager
+            rate_manager.record_success(portal_name)
+            
+            # Registrar sucesso do proxy se estiver sendo usado
+            if self.current_proxy:
+                proxy_manager.report_proxy_result(self.current_proxy, True)
+                self.logger.debug(f"Proxy {self.current_proxy.ip}:{self.current_proxy.port} - sucesso")
+            
             self.logger.info(f"Scraping concluído: {len(properties)} propriedades válidas")
             
         except Exception as e:
             self.logger.error(f"Erro durante scraping: {e}")
             result.error_message = str(e)
             result.success = False
+            
+            # Registrar falha no rate manager
+            rate_manager.record_failure(portal_name)
+            
+            # Registrar falha do proxy se estiver sendo usado
+            if self.current_proxy:
+                proxy_manager.report_proxy_result(self.current_proxy, False)
+                self.logger.debug(f"Proxy {self.current_proxy.ip}:{self.current_proxy.port} - falha")
             
         finally:
             # Limpar recursos
