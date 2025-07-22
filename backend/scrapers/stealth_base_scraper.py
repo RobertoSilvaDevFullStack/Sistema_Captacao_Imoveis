@@ -71,7 +71,6 @@ class StealthBaseScraper(ABC):
             logger.setLevel(logging.INFO)
         return logger
     
-    @intelligent_rate_limit(action_type='navigation', max_retries=3)
     def navigate_to_url(self, url: str, simulate_reading: bool = True) -> bool:
         """
         Navega para URL com proteção anti-detecção
@@ -83,6 +82,9 @@ class StealthBaseScraper(ABC):
         Returns:
             bool: Sucesso da navegação
         """
+        # Aplicar rate limiting manualmente com o portal dinâmico
+        if STEALTH_AVAILABLE:
+            advanced_rate_manager.wait_for_request(self.portal, 'navigation')
         try:
             if not self.driver_wrapper:
                 raise RuntimeError("Driver não foi inicializado")

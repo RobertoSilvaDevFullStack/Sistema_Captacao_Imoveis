@@ -170,6 +170,10 @@ class HeaderRotator:
             options.append('--disable-gpu')
             
         return options
+    
+    def get_headers(self, portal: Optional[str] = None) -> Dict[str, str]:
+        """Método de compatibilidade - retorna headers aleatórios"""
+        return self.get_random_headers(portal)
 
 # Instância global para uso fácil
 header_rotator = HeaderRotator()
