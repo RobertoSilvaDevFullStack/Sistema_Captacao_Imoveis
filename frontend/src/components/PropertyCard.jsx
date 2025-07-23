@@ -5,11 +5,34 @@ import { ExternalLink, MapPin, Home, Bed, Bath, Maximize } from 'lucide-react';
 const PropertyCard = ({ property, onClick }) => {
   const formatPrice = (price) => {
     if (!price || price === 'N/A') return 'Preço não informado';
+    
+    // Se já é string formatada (dados antigos), retorna como está
+    if (typeof price === 'string' && price.includes('R$')) return price;
+    
+    // Se é número, formatar para moeda brasileira
+    if (typeof price === 'number') {
+      return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(price);
+    }
+    
     return price;
   };
 
   const formatArea = (area) => {
     if (!area || area === 'N/A') return '';
+    
+    // Se já é string formatada, retorna como está
+    if (typeof area === 'string' && area.includes('m²')) return area;
+    
+    // Se é número, formatar com m²
+    if (typeof area === 'number') {
+      return `${area} m²`;
+    }
+    
     return area;
   };
 
@@ -35,8 +58,8 @@ const PropertyCard = ({ property, onClick }) => {
       {/* Header com fonte */}
       <div className="p-4 border-b border-gray-100">
         <div className="flex justify-between items-start mb-2">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSourceColor(property.source)}`}>
-            {property.source || 'Fonte desconhecida'}
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSourceColor(property.source || property.portal)}`}>
+            {property.source || (property.portal === 'vivareal' ? 'VivaReal' : 'Fonte desconhecida')}
           </span>
           
           {property.url && property.url !== 'N/A' && property.url !== '#' && (
@@ -65,10 +88,10 @@ const PropertyCard = ({ property, onClick }) => {
         </div>
 
         {/* Localização */}
-        {property.location && property.location !== 'N/A' && (
+        {(property.location || property.address) && (
           <div className="flex items-center mb-3 text-gray-600">
             <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
-            <p className="text-sm line-clamp-1">{property.location}</p>
+            <p className="text-sm line-clamp-1">{property.location || property.address}</p>
           </div>
         )}
 

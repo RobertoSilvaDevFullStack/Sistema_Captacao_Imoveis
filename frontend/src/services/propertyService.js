@@ -1,7 +1,7 @@
 // frontend/src/services/propertyService.js
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'http://localhost:8000';
 
 // Configuração do axios
 const apiClient = axios.create({
@@ -80,20 +80,26 @@ export const propertyService = {
         ...filters
       };
 
-      const response = await apiClient.get('/api/properties/search', { params });
+      const response = await apiClient.post('/api/search', params);
       
       return {
         success: true,
-        data: response.data,
-        total: response.data.length,
-        timestamp: new Date().toISOString()
+        data: response.data.data || response.data,
+        total: response.data.total || response.data.length,
+        timestamp: response.data.timestamp || new Date().toISOString()
       };
       
     } catch (error) {
-      console.error('Erro ao buscar propriedades:', error);
+      console.error('❌ ERRO ao buscar propriedades:', error);
+      console.error('🔍 Tentando conectar com:', API_BASE_URL);
       
-      // Retornar dados mockados em caso de erro
-      return this.getMockProperties(filters);
+      // Em vez de retornar dados mockados, retornar erro
+      return {
+        success: false,
+        error: `Erro de conexão: ${error.message}. Backend não está respondendo em ${API_BASE_URL}`,
+        data: [],
+        total: 0
+      };
     }
   },
 

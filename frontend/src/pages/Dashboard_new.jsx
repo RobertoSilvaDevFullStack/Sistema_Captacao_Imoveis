@@ -101,7 +101,7 @@ const RealEstateDashboard = () => {
 
   // Abrir Simple Dashboard em nova aba
   const openSimpleDashboard = () => {
-    window.open('http://localhost:5001', '_blank');
+    window.open('http://localhost:5000', '_blank');
   };
 
   return (

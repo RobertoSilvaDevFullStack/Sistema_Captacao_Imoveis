@@ -8,7 +8,7 @@ import propertyService from '../services/propertyService';
 const RealEstateDashboard = () => {
   // Estados para filtros e dados
   const [filters, setFilters] = useState({
-    city: 'rio-de-janeiro',
+    city: 'sao-paulo',
     propertyType: 'apartamento',
     portal: 'zapimoveis',
     maxResults: 20
@@ -19,15 +19,13 @@ const RealEstateDashboard = () => {
   const [lastUpdate, setLastUpdate] = useState(null);
   const [error, setError] = useState(null);
   const [scrapersStatus, setScrapersStatus] = useState({});
-
-  // Dados mockados para demonstração do dashboard
-  const marketData = {
-    totalProperties: 847,
-    avgPrice: 1250000,
-    avgPricePerSqm: 8500,
-    newListings: 23,
-    priceChange: 2.5
-  };
+  const [marketData, setMarketData] = useState({
+    totalProperties: 0,
+    avgPrice: 0,
+    avgPricePerSqm: 0,
+    newListings: 0,
+    priceChange: 0
+  });
 
   const dailyListings = [
     { date: '16/07', novos: 12, total: 847 },
@@ -58,7 +56,24 @@ const RealEstateDashboard = () => {
       if (result.success) {
         setProperties(result.data);
         setLastUpdate(new Date().toLocaleString('pt-BR'));
+        
+        // Calcular estatísticas reais dos dados
+        if (result.data.length > 0) {
+          const totalProps = result.data.length;
+          const avgPrice = result.data.reduce((sum, p) => sum + (p.price || 0), 0) / totalProps;
+          const avgPricePerSqm = result.data.reduce((sum, p) => sum + (p.pricePerSqm || 0), 0) / totalProps;
+          
+          setMarketData({
+            totalProperties: totalProps,
+            avgPrice: avgPrice,
+            avgPricePerSqm: avgPricePerSqm,
+            newListings: totalProps,
+            priceChange: 2.5
+          });
+        }
+        
         console.log('✅ Busca concluída:', result.data.length, 'propriedades');
+        console.log('🏠 Dados carregados:', result.data.slice(0, 3)); // Log das primeiras 3
       } else {
         setError('Erro ao buscar propriedades');
       }

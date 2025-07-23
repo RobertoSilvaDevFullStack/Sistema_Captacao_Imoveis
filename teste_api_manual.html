@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste Manual da API</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .property { border: 1px solid #ddd; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .price { color: green; font-weight: bold; }
+        .error { color: red; }
+        button { padding: 10px 20px; font-size: 16px; margin: 10px; }
+    </style>
+</head>
+<body>
+    <h1>🏠 Teste Manual da API - Sistema de Imóveis</h1>
+    
+    <div>
+        <button onclick="testHealth()">Testar Health</button>
+        <button onclick="testSearch()">Testar Busca</button>
+        <button onclick="clearResults()">Limpar</button>
+    </div>
+    
+    <div id="results"></div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        
+        async function testHealth() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<h3>🔧 Testando Health...</h3>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/health`);
+                const data = await response.json();
+                
+                results.innerHTML = `
+                    <h3>✅ Health Check OK</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                results.innerHTML = `
+                    <h3 class="error">❌ Erro no Health Check</h3>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+        
+        async function testSearch() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<h3>🔍 Testando Busca...</h3>';
+            
+            try {
+                const searchData = {
+                    city: 'sao-paulo',
+                    propertyType: 'apartamento',
+                    portal: 'zapimoveis',
+                    maxResults: 5
+                };
+                
+                const response = await fetch(`${API_BASE}/api/search`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(searchData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    let html = `<h3>✅ Busca OK - ${data.total} propriedades encontradas</h3>`;
+                    
+                    data.data.forEach((prop, index) => {
+                        html += `
+                            <div class="property">
+                                <h4>${prop.title}</h4>
+                                <p class="price">R$ ${prop.price.toLocaleString('pt-BR')}</p>
+                                <p>📍 ${prop.neighborhood}, ${prop.city}</p>
+                                <p>🏠 ${prop.bedrooms} quartos • ${prop.area}m²</p>
+                            </div>
+                        `;
+                    });
+                    
+                    results.innerHTML = html;
+                } else {
+                    results.innerHTML = `
+                        <h3 class="error">❌ Erro na busca</h3>
+                        <p>${data.error || 'Erro desconhecido'}</p>
+                    `;
+                }
+                
+            } catch (error) {
+                results.innerHTML = `
+                    <h3 class="error">❌ Erro de conexão</h3>
+                    <p>${error.message}</p>
+                    <p>Certifique-se de que o backend está rodando em localhost:8000</p>
+                `;
+            }
+        }
+        
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        // Testar automaticamente ao carregar
+        window.onload = function() {
+            setTimeout(testHealth, 1000);
+        };
+    </script>
+</body>
+</html>

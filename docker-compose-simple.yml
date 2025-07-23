@@ -1,0 +1,75 @@
+# docker-compose-simple.yml - Versão simplificada para testes iniciais
+# Usar este arquivo para validar a configuração básica antes do ambiente completo
+
+services:
+  # Selenium Hub
+  selenium-hub:
+    image: selenium/hub:4.15.0
+    container_name: selenium-hub-simple
+    ports:
+      - "4444:4444"
+    environment:
+      - GRID_MAX_SESSION=10
+      - GRID_BROWSER_TIMEOUT=300
+      - GRID_TIMEOUT=300
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+
+  # Chrome Node básico
+  chrome-node:
+    image: selenium/node-chrome:4.15.0
+    container_name: chrome-node-simple
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=2
+      - NODE_MAX_SESSION=2
+      - SE_SCREEN_WIDTH=1920
+      - SE_SCREEN_HEIGHT=1080
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+
+  # Redis para cache
+  redis:
+    image: redis:7-alpine
+    container_name: redis-simple
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+
+  # PostgreSQL para dados
+  postgres:
+    image: postgres:15
+    container_name: postgres-simple
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=scraping_db
+      - POSTGRES_USER=scraper_user
+      - POSTGRES_PASSWORD=secure_password_2024
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+
+networks:
+  selenium-grid:
+    driver: bridge
+
+volumes:
+  redis_data:
+  postgres_data:
